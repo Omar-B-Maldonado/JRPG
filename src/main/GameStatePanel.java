@@ -1,32 +1,32 @@
 package main;
 
 import javax.swing.*;
+
+import states.GameState;
+
 import java.awt.*;
 
 public class GameStatePanel extends JPanel
-{
-	
-	private static final int PANEL_WIDTH = 800;
-	private static final int PANEL_HEIGHT = 600;
-	
+{	
 	private GameState currentState;
 	
-	public GameStatePanel()
+	public GameStatePanel(int width, int height)
 	{
-		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-		setDoubleBuffered(true);
-		setFocusable(true);
-		requestFocus();
+		setPreferredSize (new Dimension(width, height));
+		
+	    setDoubleBuffered(true);
 	}
 	
 	public void setState(GameState state)
 	{
-		this.currentState = state;
+		currentState = state;
 	}
 	
+	@Override
 	protected void paintComponent(Graphics pen)
 	{
-		super.paintComponent(pen);;
+		super.paintComponent(pen);
+		
 		if(currentState != null)
 		{
 			currentState.render(pen);

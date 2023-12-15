@@ -1,9 +1,10 @@
 package main;
 
-import java.awt.Graphics;
 import java.util.Stack;
 
 import javax.swing.JFrame;
+
+import states.GameState;
 
 public class GameStateManager 
 {
@@ -11,22 +12,20 @@ public class GameStateManager
 	
 	private GameStatePanel statePanel;
 	
-	public GameStateManager(GameStatePanel statePanel)
+	public GameStateManager()
 	{
 		stateStack = new Stack<>();
 		
-		this.statePanel = statePanel;
+		statePanel = Game.statePanel;
 	}
-	
-	//-----------------------------------------------------
 	
 	public void pushState(GameState state)
 	{	
 		state.init();
 		
-		statePanel.setState(state);
-		
 		stateStack.push(state);
+		
+		statePanel.setState(state);
 	}
 	
 	public void popState()
@@ -35,39 +34,25 @@ public class GameStateManager
 		{	
 			stateStack.pop();
 			
-			if(!stateStack.isEmpty()) 
-			{
-				statePanel.setState(stateStack.peek());	//sets the state of the statePanel to the state that is on top of the stack
-			}
-			else	// if the state stack is empty
-			{
-				statePanel.setState(null);
-			}
+			//sets the statePanel's state to the one on top of the stack
+			if(!stateStack.isEmpty()) statePanel.setState(stateStack.peek());
 			
+			else statePanel.setState(null);
 		}
 	}
-	//------------------------------------------------------
 	
 	public void update()
 	{
-		if(!stateStack.isEmpty())
-		{
-			stateStack.peek().update();	//calls the top state's update method
-		}
+		//calls the top state's update method
+		if(!stateStack.isEmpty()) stateStack.peek().update();
 	}
-
-	//------------------------------------------------------
 	
 	public GameState getPreviousState()
 	{
-		if(stateStack.size() > 1)	//if there are 2 or more states in the stack
-		{
-			return(stateStack.get(stateStack.size() - 2));
-		}
+		//if there are 2+ states in the stack return the index of the state underneath the top one
+		if(stateStack.size() > 1) return(stateStack.get(stateStack.size() - 2));
 		
 		else return null;
 	}
-	
-	//------------------------------------------------------
 	
 }
