@@ -139,11 +139,10 @@ public class BattleUI extends InputHandler
 	    	  buttonRefreshTimer.start();
 	      }
 	      
-	      if (choiceAllowed && (arrowX == defendButtonX) && pressing[ENTER]) 
+	      else if (choiceAllowed && (arrowX == defendButtonX) && pressing[ENTER]) 
 	      {
 	    	  defendButtonImage = defendButtonPressedScaled;
 	    	  choice 			= "defend";
-	    	  choiceAllowed     = false;
 	    	  
 	    	  arrowY = defendButtonY - 8 * Game.SCALE;
 	    	  arrowBobTimer.stop();
@@ -151,10 +150,10 @@ public class BattleUI extends InputHandler
 	    	  buttonRefreshTimer.start();
 	      }
 	      
-	      if (choiceAllowed && (arrowX == attackButtonX) && pressing[ENTER]) {
+	      else if (choiceAllowed && (arrowX == attackButtonX) && pressing[ENTER]) 
+	      {
 	    	  attackButtonImage = attackButtonPressedScaled;
 	    	  choice            = "attack";
-	    	  choiceAllowed     = false;
 	    	  
 	    	  arrowY = attackButtonY - 8 * Game.SCALE;
 	    	  arrowBobTimer.stop();

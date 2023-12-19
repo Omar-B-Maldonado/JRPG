@@ -1,6 +1,8 @@
 package entity;
 
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,8 +16,15 @@ import states.*;
 
 public class Player extends Entity
 {
-	public final double screenX = Game.SCREEN_WIDTH  / 2 - 8;
-	public final double screenY = Game.SCREEN_HEIGHT / 2 - 8;
+	public final double screenX   = Game.SCREEN_WIDTH  / 2 - 8;
+	public final double screenY   = Game.SCREEN_HEIGHT / 2 - 8;
+	
+	public int maxHeartContainers = 4;
+	
+	Image heartContainer;
+	Image fullHeart;
+	int   heartX;
+	int   heartY;
 	
 	public Player(int x, int y)
 	{	
@@ -31,7 +40,14 @@ public class Player extends Entity
 		{ 
 			@Override public void actionPerformed(ActionEvent e) {shotCooldown.stop();}
         });
-		health = 2;
+		
+		health = maxHeartContainers * 4; //3 hearts, each with 4 quarters
+		
+		//THIS WILL BE MOVED TO AN OVERWORLD UI CLASS IN THE FUTURE
+		heartContainer  = Toolkit.getDefaultToolkit().getImage("res/overworld ui/heart_container.png");
+		fullHeart		= Toolkit.getDefaultToolkit().getImage("res/overworld ui/full_heart.png");
+		heartX 			= 10 * Game.SCALE;
+		heartY			= /*Game.SCREEN_HEIGHT - 16 * Game.SCALE -*/ 10;
 	}
 	
 	public void update()
@@ -57,16 +73,50 @@ public class Player extends Entity
 	    
 	    if (shooting() && !shotCooldown.isRunning()) fire();
 	    
-	    sprite.applyFriction();
-		sprite.move();
-	    
+	    move();  
 	}
 	
 	public void draw(Graphics pen) 
-	{      
+	{
 		sprite.draw(pen);
     }
 	
+	public void move()
+	{
+		sprite.applyFriction();
+		sprite.move();
+	}
+	
+	//THIS WILL BE MOVED TO AN OVERWORLD UI CLASS IN THE FUTURE//
+	public void drawHeartContainers(Graphics pen)
+	{
+		for (int i = 0; i < maxHeartContainers; i++)
+		{
+			pen.drawImage(heartContainer, heartX, heartY, 16 * Game.SCALE, 16 * Game.SCALE, null);
+			
+			heartX += 17 * Game.SCALE;
+		}
+		heartX = 10 * Game.SCALE;
+	}
+	
+	public void drawHearts(Graphics pen)
+	{
+		
+		for (int i = 1; i <= maxHeartContainers; i++)
+		{
+			if (health >= i * 4) pen.drawImage(fullHeart, heartX, heartY, 16 * Game.SCALE, 16 * Game.SCALE, null);
+			else //only draw leading heart
+			{
+				int leadingHealth  = 4 - ((i * 4) - health);
+				if (leadingHealth != 0) pen.drawImage(Toolkit.getDefaultToolkit().getImage("res/overworld ui/heart_" + leadingHealth + ".png"), heartX, heartY, 16 * Game.SCALE, 16 * Game.SCALE, null);
+				heartX = 10 * Game.SCALE;
+				return;
+			}
+			heartX += 17 * Game.SCALE;
+		}
+		heartX = 10 * Game.SCALE;
+	}
+	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
 	
 	public void fireBullet(Sprite r, int vx, int vy)
 	{

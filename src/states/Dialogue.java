@@ -60,6 +60,16 @@ public class Dialogue extends InputHandler implements GameState
 			dialogues[4] = "Do you wanna fight?";
 			dialogues[5] = "Dang, I thought you might.";
 		}
+		
+		if (OverWorld.skellington != null && OverWorld.enemy == OverWorld.skellington) 
+		{
+			dialogues[0] = "Leave me alone!";
+			dialogues[1] = "I'm not like the other skeletons!";
+			dialogues[2] = "I'm Skellington!";
+			dialogues[3] = "Sorry if that was rude...";
+			dialogues[4] = "But I don't want to be near you...";
+			dialogues[5] = "it's nothing personal.";
+		}
 	}
 	
 	public void speak()
@@ -80,8 +90,11 @@ public class Dialogue extends InputHandler implements GameState
 			currentDialogue = dialogues[dialogueIndex];
 			dialogueIndex++;
 			
-			//add yes/no condition
-			if (dialogueIndex == dialogues.length - 1) displayingOptions = true;
+			//add yes/no condition for certain NPCs
+			if (OverWorld.enemy  == OverWorld.monk2 && dialogueIndex == dialogues.length - 1)
+			{
+				displayingOptions = true;
+			}
 			
 			pressCooldown.start();
 			letterByLetter.start();
@@ -211,6 +224,11 @@ public class Dialogue extends InputHandler implements GameState
 			faceset = Toolkit.getDefaultToolkit().getImage("res/facesets/monk2Faceset.png");
 			faceset = faceset.getScaledInstance(38 * Game.SCALE, 38 * Game.SCALE, Image.SCALE_FAST);
 		}
+		if (OverWorld.skellington != null && OverWorld.enemy == OverWorld.skellington) 
+		{
+			faceset = Toolkit.getDefaultToolkit().getImage("res/facesets/skellingtonFaceset.png");
+			faceset = faceset.getScaledInstance(38 * Game.SCALE, 38 * Game.SCALE, Image.SCALE_FAST);
+		}
 	}
 	
 	public void playDialogueSkippedSound()
@@ -247,8 +265,9 @@ public class Dialogue extends InputHandler implements GameState
 		OverWorld.bulletManager.pauseBullets();
 		
 		//pause skeletons
-		for (int i = 0; i < OverWorld.skeleton.length;      i++) if (OverWorld.skeleton[i]      != null) OverWorld.skeleton[i].sprite.setMoving(false);
-				
+		for (int i = 0; i < OverWorld.skeleton.length; i++) if (OverWorld.skeleton[i]!= null) OverWorld.skeleton[i].sprite.setMoving(false);
+		
+		if (OverWorld.skellington != null) OverWorld.skellington.sprite.setMoving(false);
 	}
 	
 	public void drawDialogueWindow(Graphics pen)
@@ -271,9 +290,9 @@ public class Dialogue extends InputHandler implements GameState
 		{
 			pen.drawString(no,  x + 25 * Game.SCALE, y + 40 * Game.SCALE);
 			pen.drawString(yes, x + 50 * Game.SCALE, y + 40 * Game.SCALE);
+			if (drawSelectedBox && selected ==  no) pen.drawRect(x + 22 * Game.SCALE, y + 33 * Game.SCALE, 14 * Game.SCALE, 10 * Game.SCALE);
+			if (drawSelectedBox && selected == yes) pen.drawRect(x + 47 * Game.SCALE, y + 33 * Game.SCALE, 16 * Game.SCALE, 10 * Game.SCALE);	
 		}
-		if (drawSelectedBox && selected ==  no) pen.drawRect(x + 22 * Game.SCALE, y + 33 * Game.SCALE, 14 * Game.SCALE, 10 * Game.SCALE);
-		if (drawSelectedBox && selected == yes) pen.drawRect(x + 47 * Game.SCALE, y + 33 * Game.SCALE, 16 * Game.SCALE, 10 * Game.SCALE);	
 	}
 	
 	public void drawFaceSet(Graphics pen)

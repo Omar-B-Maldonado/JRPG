@@ -32,12 +32,16 @@ public class Pause extends InputHandler implements GameState
 	@Override
 	public void render(Graphics pen) 
 	{
+		//pause player
 		OverWorld.player.sprite.setMoving(false);
 		
 		OverWorld.bulletManager.pauseBullets();
 		
 		//pause skeletons
 		for (int i = 0; i < OverWorld.skeleton.length; i++) if (OverWorld.skeleton[i] != null) OverWorld.skeleton[i].sprite.setMoving(false);
+		
+		//pause skellington
+		if (OverWorld.skellington != null) OverWorld.skellington.sprite.setMoving(false);
 		
 		drawPreviousState(pen);
 		

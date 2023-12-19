@@ -50,14 +50,14 @@ public class Sprite extends Rect
 	{
 		pose = UP;
 		moving = true;
-		goUP(dy);;
+		goUP(dy);
 	}
 	
 	public void moveDN(double dy)
 	{
 		pose = DN;
 		moving = true;
-		goDN(dy);;
+		goDN(dy);
 	}
 	
 	public void moveLT(double dx)
@@ -71,7 +71,7 @@ public class Sprite extends Rect
 	{
 		pose = RT;
 		moving = true;
-		goRT(dx);;
+		goRT(dx);
 	}
 	
 	public boolean isFacing(Sprite s)

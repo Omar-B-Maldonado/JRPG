@@ -286,10 +286,10 @@ public class Rect
 	
 	public boolean isInTalkingRangeOf(Rect r)
 	{
-		double topBound    = r.y - h - 5;
-		double bottomBound = r.y + r.h + 5;
-		double rightBound  = r.x + r.w + 5;
-		double leftBound   = r.x - w - 5;
+		double topBound    = r.y - h - 6;
+		double bottomBound = r.y + r.h + 6;
+		double rightBound  = r.x + r.w + 6;
+		double leftBound   = r.x - w - 6;
 		
 		return (topBound <= y && y < bottomBound) && (leftBound <= x && x < rightBound);
 	}
@@ -300,8 +300,7 @@ public class Rect
 		if(wasBelow  (r)) r.goUP(20);
 
 		if(wasLeftOf (r)) r.goRT(20);
-		if(wasRightOf(r)) r.goLT(20);
-		
+		if(wasRightOf(r)) r.goLT(20);	
 	}
 	
 	public void bounceV()			

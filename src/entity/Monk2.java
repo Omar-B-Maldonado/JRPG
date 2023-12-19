@@ -3,6 +3,7 @@ package entity;
 import java.awt.Graphics;
 
 import engine.Sprite;
+import states.OverWorld;
 
 public class Monk2 extends Entity
 {

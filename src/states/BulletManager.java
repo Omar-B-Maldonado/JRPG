@@ -63,12 +63,20 @@ public class BulletManager
 		for (int k = 0; k < playerBullet.length; k++) if (playerBullet[k] != null) 
 		{
 			playerBullet[k].move();
+			
 			handleSkeletHitByPlayerBullet(k);
+			
+			handleSkellingtonHitByPlayerBullet(k);
+			
+			handleMonkHitByPlayerBullet(k);
 		}
 		for (int k = 0; k < skeletBullet.length; k++) if (skeletBullet[k] != null) 
 		{
 			skeletBullet[k].move();
+			
 			handlePlayerHitBySkeletBullet(k);
+			
+			handleMonkHitBySkeletBullet(k);
 		}
 	}
 	
@@ -93,18 +101,35 @@ public class BulletManager
     			Game.soundManager.play();
     			
     			playerBullet[k] = null;
-    				skelet[i].health --;
+    				skelet[i].subtractHealth(1);
     			if (skelet[i].health < 1) skelet[i] = null;
 			}
 		}
 	}
 	
+	public void handleSkellingtonHitByPlayerBullet(int k) 
+	{
+		if (OverWorld.skellington != null && playerBullet[k] != null && playerBullet[k].overlaps(OverWorld.skellington.sprite))
+			{
+				playerBullet[k].knockBack(OverWorld.skellington.sprite);
+    			
+				OverWorld.skellington.sprite.move();
+				OverWorld.skellington.sprite.applyFriction();
+    			
+    			Game.soundManager.setSound("Kill.wav");
+    			Game.soundManager.play();
+    			
+    			playerBullet[k] = null;
+    			OverWorld.skellington.subtractHealth(1);
+    			if (OverWorld.skellington.health < 1) OverWorld.skellington = null;
+			}
+	}
+	
 	public void handlePlayerHitBySkeletBullet(int k) 
 	{
-		if (skeletBullet[k].overlaps(player.sprite)) 
+		if (skeletBullet[k] != null && skeletBullet[k].overlaps(player.sprite)) 
 		{
-			
-			Game.soundManager.setSound("Impact.wav");
+			Game.soundManager.setSound("Hit.wav");
 			Game.soundManager.play();
 			
 			skeletBullet[k] = null;
@@ -115,6 +140,25 @@ public class BulletManager
 				Game.stateManager.popState(); //gets rid of overworld
 				Game.stateManager.pushState(gameOver);
 			}
+		}
+	}
+	
+	public void handleMonkHitBySkeletBullet(int k)
+	{
+		if (OverWorld.monk2 != null && skeletBullet[k] != null && skeletBullet[k].overlaps(OverWorld.monk2.sprite)) 
+		{
+			skeletBullet[k] = null;
+		}
+	}
+	
+	public void handleMonkHitByPlayerBullet(int k)
+	{
+		if (OverWorld.monk2 != null && playerBullet[k] != null && playerBullet[k].overlaps(OverWorld.monk2.sprite))
+		{
+			Game.soundManager.setSound("Fx.wav");
+			Game.soundManager.play();
+			
+			playerBullet[k] = null;
 		}
 	}
 	

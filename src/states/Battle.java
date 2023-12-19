@@ -37,6 +37,10 @@ public class Battle extends InputHandler implements GameState
 	Image healthBox;				Image healthBoxScaled;
 	Image dialogueBox;				Image dialogueBoxScaled;
 	
+	int hBarWidth;
+	int hBarContainerX;
+	int hBarContainerY;
+	int hBarContainerWidth;
 	
 	
 	static Animation double_slash = new Animation("res/battle attacks/", "double_slash", 4, 5);
@@ -48,6 +52,7 @@ public class Battle extends InputHandler implements GameState
 	boolean   hitSoundPlayed = false;
 	boolean blockSoundPlayed = false;
 	
+	//NOTE, NEED TO FIX UI AND ANIMATION TIMING FOR BETTER JUICE
 	public Battle() 
 	{
 		loadResources();
@@ -64,6 +69,12 @@ public class Battle extends InputHandler implements GameState
 			bg    = bgPlainsDuskScaled;
 			enemy =  Monk2AttackScaled;
 		}
+		
+		hBarContainerX = 496;
+		hBarContainerY =  76;
+		
+		hBarWidth      = 200;
+		hBarContainerWidth = hBarWidth + 8;
 		
 		Game.soundManager.loadMusic("Tension.wav");
 		Game.soundManager.playMusic();
@@ -97,6 +108,7 @@ public class Battle extends InputHandler implements GameState
     	  {
     		  playHitSound(); 
 	    	  OverWorld.monk2.hitFor(1);
+	    	  hBarWidth -= 10;
 	    	  System.out.println(OverWorld.monk2.health);
     	  }
       }
@@ -114,7 +126,7 @@ public class Battle extends InputHandler implements GameState
       if (UI.choice.equals(      "")) 
       {
     	  currentAnimation = null;
-    	    hitSoundPlayed = false;
+    	  hitSoundPlayed   = false;
     	  blockSoundPlayed = false;
       }
       
@@ -153,13 +165,23 @@ public class Battle extends InputHandler implements GameState
 		}
 		
 		pen.drawImage(NimaAttackScaled, 15 * Game.SCALE, 35 * Game.SCALE, null);
-		
-		UI.render(pen);
-		
+
 		if (currentAnimation != null) 
 		{
 			if (currentAnimation == double_slash) pen.drawImage(currentAnimation.getCurrentImage(), 175 * Game.SCALE, 55 * Game.SCALE, 160, 160, null);
 		}
+		UI.render(pen);
+		
+		OverWorld.player.drawHeartContainers(pen);
+		OverWorld.player.drawHearts         (pen);
+		
+		//health bar container
+		pen.setColor(Color.DARK_GRAY);
+		pen.fillRoundRect(hBarContainerX, hBarContainerY, hBarContainerWidth, 20, 15, 15);
+		
+		//health bar
+		pen.setColor(Color.MAGENTA);
+		pen.fillRoundRect(hBarContainerX + 4, hBarContainerY + 4, hBarWidth, 12, 15, 15);
 	}
 	
 	public void loadResources()

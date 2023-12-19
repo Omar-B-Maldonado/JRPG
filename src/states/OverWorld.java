@@ -15,6 +15,7 @@ import entity.Entity;
 import entity.Monk2;
 import entity.Player;
 import entity.Skeleton;
+import entity.Skellington;
 import main.*;
 
 public class OverWorld extends InputHandler implements GameState
@@ -34,11 +35,13 @@ public class OverWorld extends InputHandler implements GameState
 	public static Player   player;
 	public static Monk2    monk2;
 	public static Skeleton[] skeleton = new Skeleton[4];
+	public static Skellington skellington;
 	
-	//  for testing //
+	//  for testing  //
 	public static Timer pressCooldown;
 	int cooldownTime = 400;
-	//				//
+	boolean inDialogueState;
+	//	-----------  //
 	
 	public OverWorld() {}
 	
@@ -57,6 +60,8 @@ public class OverWorld extends InputHandler implements GameState
 		skeleton[1]   = new Skeleton(265, 240);
 		skeleton[2]   = new Skeleton(130, 300);
 		skeleton[3]   = new Skeleton(265, 300);
+		
+		skellington   = new Skellington(220, 350);
 		
 		bulletManager = new BulletManager();
 			
@@ -78,50 +83,105 @@ public class OverWorld extends InputHandler implements GameState
 	public void update() 
 	{
 		enemy = null;
+		inDialogueState = false;
 		
 		if (pressing[_P]) stateManager.pushState (pause);
 	    if (pressing[_O]) stateManager.pushState(battle);
 		
 	    bulletManager.updateBullets();
 	    
+	    //--------------------------------PLAYER MOVEMENT AND COLLISION---------//
 	    player.update();
 	    
+	    //player collides with skeletons
+	    for (int i = 0; i < skeleton.length; i++) 
+	    {
+	    	if (skeleton[i] != null && player.sprite.overlaps(skeleton[i].sprite))
+	    	{
+	    		player.sprite.pushOutOf(skeleton[i].sprite);
+	    	}
+	    }
+	    //player collides with skellington
+	    if (skellington != null && player.sprite.overlaps(skellington.sprite)) player.sprite.pushOutOf(skellington.sprite);
+	    
+	    //player collides with monk2
+	    if (monk2       != null && player.sprite.overlaps(      monk2.sprite)) player.sprite.pushOutOf(      monk2.sprite);
+	    //---------------------------------------------------------------------//
+	 	  
+	    
+	    //--------------------------SKELLINGTON MOVEMENT AND COLLISION---------//
+	    if (skellington != null) 
+	    {
+	    	skellington.update();
+	    	
+	    	//skellington collides with monk2
+	    	if (monk2 != null && skellington.sprite.overlaps( monk2.sprite)) skellington.sprite.pushOutOf(monk2.sprite);
+	 	    
+	    	//skellington collides with player
+	    	if				    (skellington.sprite.overlaps(player.sprite)) skellington.sprite.pushOutOf(player.sprite);
+	    	
+	    	//skellington collides with skeletons
+		    for (int i = 0; i < skeleton.length; i++) 
+		    {
+		    	if (skeleton[i] != null && skellington.sprite.overlaps(skeleton[i].sprite))
+		    	{
+		    		skellington.sprite.pushOutOf(skeleton[i].sprite);
+		    	}
+		    }
+	    	//handle player talks to skellington
+	 	    if (player.sprite.isInTalkingRangeOf(skellington.sprite) && player.sprite.isFacing(skellington.sprite) && pressing[ENTER] && !pressCooldown.isRunning())
+	 	    {
+	 	    	player.sprite.moving = false;
+	 	    	skellington.sprite.face(player.sprite);
+	 	    	enemy = skellington;
+	 	    	stateManager.pushState(dialogue);
+	 	    	inDialogueState = true;
+	 	    }
+	    }
+	    //---------------------------------------------------------------//
+	    
+	    //---------------------------- MONK2 -------------------------// 
 	    if (monk2 != null) 
 	    {
 	    	monk2.update();
 	    	
-	    	if (player.sprite.overlaps(monk2.sprite)) player.sprite.pushOutOf(monk2.sprite);
-	 	    
+	    	//handle player talks to monk2
 	 	    if (player.sprite.isInTalkingRangeOf(monk2.sprite) && player.sprite.isFacing(monk2.sprite) && pressing[ENTER] && !pressCooldown.isRunning())
 	 	    {
 	 	    	player.sprite.moving = false;
 	 	    	monk2.sprite.face(player.sprite);
 	 	    	enemy = monk2;
 	 	    	stateManager.pushState(dialogue);
+	 	    	inDialogueState = true;
 	 	    }
 	    }	
+	    //-----------------------------------------------------------//
 	    
+	    //---------------------SKELETON MOVEMENT AND COLLISION-----------------------//
 	    for (int i = 0; i < skeleton.length; i++)
 	    {
-	    	if (skeleton[i]!= null) skeleton[i].update();
+	    	if (skeleton[i]!= null) 
+	    	{
+	    		skeleton[i].update();
 	    	
-	    	//skeletons collide with each other
-            for (int j = 0; j < skeleton.length; j++) 
-            {
-                if (i != j && skeleton[j] != null && skeleton[i] != null && skeleton[i].sprite.overlaps(skeleton[j].sprite)) 
-                {
-                    skeleton[i].sprite.pushOutOf(skeleton[j].sprite);
-                }
-            }
-            //skeletons collide with monk
-            if (monk2 != null && skeleton[i] != null && skeleton[i].sprite.overlaps(monk2.sprite)) 
-            {
-                skeleton[i].sprite.pushOutOf(monk2.sprite);
-            }  
-            //player collides with skeletons
-            if (skeleton[i] != null && player.sprite.overlaps(skeleton[i].sprite)) player.sprite.pushOutOf(skeleton[i].sprite);
+		    	//skeles collide w/ player
+		    	if (skeleton[i].sprite.overlaps(player.sprite)) skeleton[i].sprite.pushOutOf(player.sprite);
+		    	
+		    	//skeletons collide with each other
+		    	for (int j = 0; j < skeleton.length; j++) 
+	            {
+	                if (i != j && skeleton[j]!= null && skeleton[i].sprite.overlaps(skeleton[j].sprite)) 
+	                {
+	                    skeleton[i].sprite.pushOutOf(skeleton[j].sprite);
+	                }
+	            }
+		    	//skeles collide w/ monk
+		    	if (monk2 != null && skeleton[i].sprite.overlaps(monk2.sprite)) skeleton[i].sprite.pushOutOf(monk2.sprite);
+	            	
+		    	//skeles collide w/ skellington
+		    	if (skellington != null && skeleton[i].sprite.overlaps(skellington.sprite)) skeleton[i].sprite.pushOutOf(skellington.sprite);
+	    	}
 	    }
-	    
 	    updateCamera();
 	  }
 
@@ -132,12 +192,27 @@ public class OverWorld extends InputHandler implements GameState
         
         bulletManager.drawBullets(pen);
         
-        if (monk2 != null) monk2.draw(pen);
-        
         //draw skeletons
         for (int i = 0; i < skeleton.length; i++) if (skeleton[i] != null) skeleton[i].draw(pen);
         
+        if (monk2 		!= null) 	   monk2.draw(pen);
+        if (skellington != null) skellington.draw(pen);
         player.draw(pen);
+        
+        //draw skeleton health bars
+        for (int i = 0; i < skeleton.length; i++)
+        {
+        	if (skeleton[i] != null && skeleton[i].damaged) skeleton[i].drawHealthBar(pen);
+        }
+        
+        //draw skellington health bar
+        if 	   (skellington != null && skellington.damaged) skellington.drawHealthBar(pen);
+        
+        if (!inDialogueState) //DRAW UI
+        {
+        	player.drawHeartContainers(pen);
+            player.drawHearts		  (pen);
+        }
 	}
 	
 	public void updateCamera()

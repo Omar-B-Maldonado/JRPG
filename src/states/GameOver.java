@@ -35,7 +35,6 @@ public class GameOver extends InputHandler implements GameState
 			
 			Game.stateManager.popState();//gets rid of game over screen
 			Game.stateManager.pushState(Game.overWorld);
-			
 		}
 		
 	}
