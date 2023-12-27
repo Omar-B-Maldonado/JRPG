@@ -34,7 +34,8 @@ public class GameOver extends InputHandler implements GameState
 			Game.soundManager.stopMusic();
 			
 			Game.stateManager.popState();//gets rid of game over screen
-			Game.stateManager.pushState(Game.overWorld);
+			Game.stateManager.popState();//gets rid of old overWorld
+			Game.stateManager.pushState(Game.overWorld); //pushes new overWorld
 		}
 		
 	}

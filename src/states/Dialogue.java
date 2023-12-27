@@ -16,6 +16,8 @@ import engine.Sprite;
 
 public class Dialogue extends InputHandler implements GameState 
 {
+	// dialogue system derived from https://www.youtube.com/@RyiSnow
+	
 	GameStateManager stateManager;
 	GameStatePanel     statePanel;
 	GameState 		previousState;
@@ -27,13 +29,13 @@ public class Dialogue extends InputHandler implements GameState
 	
 	String dialogues[] = new String[6];
 	String currentDialogue = "";
-	int dialogueIndex = 0;
+	int dialogueIndex;
 	
 	Timer letterByLetter;
-	Timer pressCooldown;
-	int cooldownTime;
+	Timer  pressCooldown;
+	int     cooldownTime;
 	
-	int i;
+	int       i;
 	String text;
 	
 	boolean displayingOptions;
@@ -113,7 +115,8 @@ public class Dialogue extends InputHandler implements GameState
 		width  = Game.SCREEN_WIDTH - ((16 * Game.SCALE) * 4);
 		height = 					   16 * Game.SCALE  * 4;
 		
-		soundCue = 0;
+		dialogueIndex = 0;
+		soundCue 	  = 0;
 		
 		cooldownTime  = 250;
 		pressCooldown = new Timer(cooldownTime, new ActionListener() 
@@ -122,6 +125,7 @@ public class Dialogue extends InputHandler implements GameState
 			{pressCooldown.stop();}
 		});
 		
+		//
 		letterByLetter = new Timer(50, new ActionListener()
 		{
 			@Override
@@ -260,14 +264,22 @@ public class Dialogue extends InputHandler implements GameState
 	public void drawPreviousState(Graphics pen)
 	{
 		previousState = stateManager.getPreviousState();
-		if (previousState != null) previousState.render(pen);
-		
-		OverWorld.bulletManager.pauseBullets();
-		
-		//pause skeletons
-		for (int i = 0; i < OverWorld.skeleton.length; i++) if (OverWorld.skeleton[i]!= null) OverWorld.skeleton[i].sprite.setMoving(false);
-		
-		if (OverWorld.skellington != null) OverWorld.skellington.sprite.setMoving(false);
+		if (previousState != null) 
+		{	
+			//pausePlayer
+			OverWorld.player.sprite.setMoving(false);
+			
+			//pause bullets
+			OverWorld.bulletManager.pauseBullets();
+			
+			//pause skeletons
+			for (int i = 0; i < OverWorld.skeleton.length; i++) if (OverWorld.skeleton[i]!= null) OverWorld.skeleton[i].sprite.setMoving(false);
+			
+			//pause skellington
+			if (OverWorld.skellington != null) OverWorld.skellington.sprite.setMoving(false);
+			
+			previousState.render(pen);
+		}
 	}
 	
 	public void drawDialogueWindow(Graphics pen)
@@ -285,11 +297,15 @@ public class Dialogue extends InputHandler implements GameState
 	public void drawText(Graphics pen) 
 	{
 		pen.setFont(pen.getFont().deriveFont(Font.PLAIN, 19F));
+		
+		//text is drawn here
 		pen.drawString(text, x + 13 * Game.SCALE, y + 25 * Game.SCALE);
+		
 		if (displayingOptions && !letterByLetter.isRunning()) 
 		{
 			pen.drawString(no,  x + 25 * Game.SCALE, y + 40 * Game.SCALE);
 			pen.drawString(yes, x + 50 * Game.SCALE, y + 40 * Game.SCALE);
+			
 			if (drawSelectedBox && selected ==  no) pen.drawRect(x + 22 * Game.SCALE, y + 33 * Game.SCALE, 14 * Game.SCALE, 10 * Game.SCALE);
 			if (drawSelectedBox && selected == yes) pen.drawRect(x + 47 * Game.SCALE, y + 33 * Game.SCALE, 16 * Game.SCALE, 10 * Game.SCALE);	
 		}

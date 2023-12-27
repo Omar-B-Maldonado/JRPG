@@ -53,9 +53,9 @@ public class Animation
 		return image[current];
 	}
 	
-	public boolean isOnLastFrame() 
+	public boolean nextFrameIsFirstFrame() 
 	{
-		return ((current == image.length - 1) && (delay == 1));
+		return ((delay - 1 == 0) && (current + 1 == image.length));
 	}
          
 }

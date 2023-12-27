@@ -31,8 +31,7 @@ public class MainMenu extends InputHandler implements GameState
 			Game.soundManager.play();
 			
 			Game.soundManager.stopMusic();
-			Game.stateManager.pushState(Game.overWorld);
-			
+			Game.stateManager.pushState(Game.overWorld);		
 		}
 		
 	}

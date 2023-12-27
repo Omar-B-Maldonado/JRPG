@@ -26,11 +26,14 @@ public class OverWorld extends InputHandler implements GameState
 	Pause   pause;
 	Camera camera;
 	
+	//instantiate in Game class
 	Dialogue dialogue = new Dialogue();
 	
 	Image background; Image backgroundScaled;
 	
 	public static Entity enemy;
+	
+	
 	
 	public static Player   player;
 	public static Monk2    monk2;
@@ -82,14 +85,11 @@ public class OverWorld extends InputHandler implements GameState
 	@Override
 	public void update() 
 	{
-		enemy = null;
+		enemy           = null;
 		inDialogueState = false;
 		
 		if (pressing[_P]) stateManager.pushState (pause);
-	    if (pressing[_O]) stateManager.pushState(battle);
-		
-	    bulletManager.updateBullets();
-	    
+		  
 	    //--------------------------------PLAYER MOVEMENT AND COLLISION---------//
 	    player.update();
 	    
@@ -131,7 +131,6 @@ public class OverWorld extends InputHandler implements GameState
 	    	//handle player talks to skellington
 	 	    if (player.sprite.isInTalkingRangeOf(skellington.sprite) && player.sprite.isFacing(skellington.sprite) && pressing[ENTER] && !pressCooldown.isRunning())
 	 	    {
-	 	    	player.sprite.moving = false;
 	 	    	skellington.sprite.face(player.sprite);
 	 	    	enemy = skellington;
 	 	    	stateManager.pushState(dialogue);
@@ -148,7 +147,6 @@ public class OverWorld extends InputHandler implements GameState
 	    	//handle player talks to monk2
 	 	    if (player.sprite.isInTalkingRangeOf(monk2.sprite) && player.sprite.isFacing(monk2.sprite) && pressing[ENTER] && !pressCooldown.isRunning())
 	 	    {
-	 	    	player.sprite.moving = false;
 	 	    	monk2.sprite.face(player.sprite);
 	 	    	enemy = monk2;
 	 	    	stateManager.pushState(dialogue);
@@ -182,6 +180,7 @@ public class OverWorld extends InputHandler implements GameState
 		    	if (skellington != null && skeleton[i].sprite.overlaps(skellington.sprite)) skeleton[i].sprite.pushOutOf(skellington.sprite);
 	    	}
 	    }
+	    bulletManager.updateBullets();
 	    updateCamera();
 	  }
 

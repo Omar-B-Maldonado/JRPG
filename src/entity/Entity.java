@@ -51,6 +51,8 @@ public abstract class Entity extends InputHandler
 	
 	public void fireAt(Sprite s) 
 	{	
+		
+		
 		double rise  = s.y + (s.h / 2) - this.sprite.y - (this.sprite.h / 2);
 	    double run   = s.x + (s.w / 2) - this.sprite.x - (this.sprite.w / 2);
 	    

@@ -44,7 +44,7 @@ public class BattleUI extends InputHandler
 	Image arrow;						Image arrowScaled;
 	Image arrowImage;
 	
-	boolean arrowMovementAllowed;
+	boolean optionSwitchAllowed;
 	boolean choiceAllowed;
 	
 	int   arrowDescendCount;
@@ -89,8 +89,7 @@ public class BattleUI extends InputHandler
 				arrowDescendCount = 0;
 				arrowBobTimer.start();
 				
-				buttonRefreshTimer.stop();
-				
+				buttonRefreshTimer.stop();	
 			}
 		});//1000ms == 1 second
 		
@@ -99,6 +98,8 @@ public class BattleUI extends InputHandler
 	
 	public void init() 
 	{
+		choiceAllowed = false;
+		choice = "";
 		setArrowXY(attackButtonX, attackButtonY);
 		arrowDescendCount = 0;
 		arrowBobTimer.start();
@@ -113,21 +114,20 @@ public class BattleUI extends InputHandler
 	
 	public void update() 
 	{
-		if (Battle.currentAnimation != null && Battle.currentAnimation.isOnLastFrame()) choice = "";
 		
 		//----------------------UPDATE ARROW CODE-----------------------------
 	      if (!pressing[_D] && !pressing[_A]) 
 	      {
-	    	  arrowMovementAllowed =  true;
+	    	  optionSwitchAllowed  =  true;
 	    	  bumpSoundPlayed      = false;
 	      }
 	     
-	      if (arrowMovementAllowed) handleArrowMovement();
+	      if (optionSwitchAllowed) handleOptions();
 	      
 	      //-------------------------HANDLE BUTTON PRESS RESPONSE------------------------
 	      if (!pressing[ENTER] && !buttonRefreshTimer.isRunning()) choiceAllowed = true;
 	      
-	      if (choiceAllowed && (arrowX ==   itemButtonX) && pressing[ENTER]) 
+	      if (choiceAllowed && (arrowOnItem()) && pressing[ENTER]) 
 	      {
 	    	  itemButtonImage   = itemButtonPressedScaled;
 	    	  choice 			= "item";
@@ -139,10 +139,11 @@ public class BattleUI extends InputHandler
 	    	  buttonRefreshTimer.start();
 	      }
 	      
-	      else if (choiceAllowed && (arrowX == defendButtonX) && pressing[ENTER]) 
+	      else if (choiceAllowed && (arrowOnDefend()) && pressing[ENTER]) 
 	      {
 	    	  defendButtonImage = defendButtonPressedScaled;
 	    	  choice 			= "defend";
+	    	  choiceAllowed     = false;
 	    	  
 	    	  arrowY = defendButtonY - 8 * Game.SCALE;
 	    	  arrowBobTimer.stop();
@@ -150,10 +151,11 @@ public class BattleUI extends InputHandler
 	    	  buttonRefreshTimer.start();
 	      }
 	      
-	      else if (choiceAllowed && (arrowX == attackButtonX) && pressing[ENTER]) 
+	      else if (choiceAllowed && (arrowOnAttack()) && pressing[ENTER]) 
 	      {
 	    	  attackButtonImage = attackButtonPressedScaled;
 	    	  choice            = "attack";
+	    	  choiceAllowed     = false;
 	    	  
 	    	  arrowY = attackButtonY - 8 * Game.SCALE;
 	    	  arrowBobTimer.stop();
@@ -165,35 +167,36 @@ public class BattleUI extends InputHandler
 	
 	public void render(Graphics pen)
 	{	
-		pen.drawImage(itemButtonImage, 	 itemButtonX,   itemButtonY,   null);
+		pen.drawImage(  itemButtonImage,   itemButtonX,   itemButtonY, null);
 		pen.drawImage(defendButtonImage, defendButtonX, defendButtonY, null);
 		pen.drawImage(attackButtonImage, attackButtonX, attackButtonY, null);
 		
 		pen.drawImage(arrowImage, arrowX + 9 * Game.SCALE, arrowY, null);	
 	}
 	
-	public void handleArrowMovement()
+	public void handleOptions()
 	{
 		if (pressing[_D]) 
 	    {
 			  if      (arrowOnAttack()) 
 			  {
 				  setArrowXY(defendButtonX, defendButtonY);
-				  resetArrowMovement(); 
+				  resetArrowVMovement(); 
 		    	  playArrowMoveSound();
 			  }
 			  else if (arrowOnDefend()) 
 			  {
 				  setArrowXY(  itemButtonX,   itemButtonY); 
-				  resetArrowMovement();
+				  resetArrowVMovement();
 		    	  playArrowMoveSound();
 			  }  
 			  else  //arrowOnItem()
 			  {
 				  setArrowXY(  itemButtonX,   itemButtonY);
-				  resetArrowMovement();
+				  resetArrowVMovement();
 				  playArrowBumpSound();
 			  }
+		  	  	optionSwitchAllowed = false;
 	      }
 		
 		if (pressing[_A]) 
@@ -201,23 +204,26 @@ public class BattleUI extends InputHandler
 			  if      (arrowOnItem()) 
 			  {
 				  setArrowXY(defendButtonX, defendButtonY);
-				  resetArrowMovement();
+				  resetArrowVMovement();
 		    	  playArrowMoveSound();
 			  }
 			  else if (arrowOnDefend()) 
 			  {
 				  setArrowXY(attackButtonX, attackButtonY);
-				  resetArrowMovement();
+				  resetArrowVMovement();
 		    	  playArrowMoveSound();
 			  }
 			  else  //arrowOnAttack()
 			  {
 				  setArrowXY(attackButtonX, attackButtonY);
-				  resetArrowMovement();
+				  resetArrowVMovement();
 				  playArrowBumpSound();
 			  }
+		  	  	optionSwitchAllowed = false;
 	      }
 	}
+	
+	public void setChoice(String choice) {this.choice = choice;}
 	
 	public boolean arrowOnItem  () {return arrowX ==   itemButtonX;}
 	public boolean arrowOnAttack() {return arrowX == attackButtonX;}
@@ -254,14 +260,11 @@ public class BattleUI extends InputHandler
 		}	
 	}
 	
-	public void resetArrowMovement()
+	public void resetArrowVMovement()
 	{
 		//moves arrow to top of pseudo animation & restarts descent
 		arrowDescendCount = 0;
 		arrowBobTimer.restart();
-		
-		//enables switching options
-  	  	arrowMovementAllowed = false;
 	}
 	
 	public void loadResources()

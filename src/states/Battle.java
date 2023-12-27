@@ -43,16 +43,12 @@ public class Battle extends InputHandler implements GameState
 	int hBarContainerWidth;
 	
 	
-	static Animation double_slash = new Animation("res/battle attacks/", "double_slash", 4, 5);
-	static Animation shield       = new Animation("res/battle attacks/", "shield"      , 6, 3);
+	Animation double_slash;
+	Animation shield;
+	Animation currentAnimation;
+	boolean animationFinished;
 	
-	public static Animation currentAnimation;
-	
-	//testing
-	boolean   hitSoundPlayed = false;
-	boolean blockSoundPlayed = false;
-	
-	//NOTE, NEED TO FIX UI AND ANIMATION TIMING FOR BETTER JUICE
+	//NEED TO FIX ARROW IMMEDATELY GOING DOWN AFTER PRESSING ENTER AGAIN SOMETIMES AND NO ATTACK HAPPENS
 	public Battle() 
 	{
 		loadResources();
@@ -79,13 +75,44 @@ public class Battle extends InputHandler implements GameState
 		Game.soundManager.loadMusic("Tension.wav");
 		Game.soundManager.playMusic();
 		
+		double_slash = new Animation("res/battle attacks/", "double_slash", 4, 5);
+		shield       = new Animation("res/battle attacks/", "shield"      , 6, 3);
+		currentAnimation  = null;
+		animationFinished = true; //no animation is playing at the start
+		
 		UI.init();
 	}
 
 	@Override
 	public void update() 
 	{		    
-      if (battleWon())
+      if (!battleWon())
+      {
+    	  UI.update();
+	      
+	      if (UI.choice.equals("attack") && animationFinished) 
+	      {
+	    	  currentAnimation  = double_slash;
+	    	  animationFinished = false;
+	    	  
+	    	  playHitSound();
+	    	  OverWorld.monk2.hitFor(1);
+	    	  hBarWidth -= 10;
+	    	  System.out.println(OverWorld.monk2.health); 
+	    	  
+	    	  
+	      }
+	      
+	      if (UI.choice.equals("defend") && animationFinished)
+	      {
+	    	  currentAnimation  = shield;
+	    	  animationFinished = false;
+	    	  
+	    	  playBlockSound();
+	    	  
+	      }
+      }
+      else if (battleWon())
       {
     	  OverWorld.monk2 = null;
     	  OverWorld.pressCooldown.start();
@@ -97,61 +124,8 @@ public class Battle extends InputHandler implements GameState
     	  stateManager.popState();
     	  stateManager.popState();
       }
-      
-      UI.update();
-      
-      if (UI.choice.equals("attack")) 
-      {
-    	  currentAnimation = double_slash;
-    	  
-    	  if (!hitSoundPlayed) 
-    	  {
-    		  playHitSound(); 
-	    	  OverWorld.monk2.hitFor(1);
-	    	  hBarWidth -= 10;
-	    	  System.out.println(OverWorld.monk2.health);
-    	  }
-      }
-      
-      if (UI.choice.equals("defend"))
-      {
-    	  currentAnimation = shield;
-    	  
-    	  if (!blockSoundPlayed)
-    	  {
-    		  playBlockSound(); 
-    	  } 
-      }
-      
-      if (UI.choice.equals(      "")) 
-      {
-    	  currentAnimation = null;
-    	  hitSoundPlayed   = false;
-    	  blockSoundPlayed = false;
-      }
-      
-      
 	}
 	
-	public void playHitSound()
-	{
-		Game.soundManager.setSound("Slash.wav");
-		Game.soundManager.play();
-		hitSoundPlayed = true;
-	}
-	
-	public void playBlockSound()
-	{
-		Game.soundManager.setSound("Alert2.wav");
-		Game.soundManager.play();
-		blockSoundPlayed = true;
-	}
-	
-	public boolean battleWon()
-	{
-		return OverWorld.monk2.health <= 0;
-	}
-
 	@Override
 	public void render(Graphics pen)
 	{
@@ -159,17 +133,29 @@ public class Battle extends InputHandler implements GameState
 		
 		pen.drawImage(enemy, 162 * Game.SCALE, 48 * Game.SCALE, null);
 		
-		if (currentAnimation != null && currentAnimation == shield) 
-		{
+		if (currentAnimation != null && !animationFinished && currentAnimation == shield) 
+		{	
 			pen.drawImage(currentAnimation.getCurrentImage(), 85 * Game.SCALE, 45 * Game.SCALE, 285, 285, null);
+			if (currentAnimation.nextFrameIsFirstFrame()) 
+			{
+				animationFinished = true;
+				UI.setChoice("");
+			}
+			
 		}
 		
 		pen.drawImage(NimaAttackScaled, 15 * Game.SCALE, 35 * Game.SCALE, null);
 
-		if (currentAnimation != null) 
+		if (currentAnimation != null && !animationFinished && currentAnimation == double_slash) 
 		{
-			if (currentAnimation == double_slash) pen.drawImage(currentAnimation.getCurrentImage(), 175 * Game.SCALE, 55 * Game.SCALE, 160, 160, null);
+			pen.drawImage(currentAnimation.getCurrentImage(), 175 * Game.SCALE, 55 * Game.SCALE, 160, 160, null);
+			if (currentAnimation.nextFrameIsFirstFrame()) 
+			{
+				animationFinished = true;
+				UI.setChoice("");
+			}
 		}
+		
 		UI.render(pen);
 		
 		OverWorld.player.drawHeartContainers(pen);
@@ -184,6 +170,23 @@ public class Battle extends InputHandler implements GameState
 		pen.fillRoundRect(hBarContainerX + 4, hBarContainerY + 4, hBarWidth, 12, 15, 15);
 	}
 	
+	public void playHitSound()
+	{
+		Game.soundManager.setSound("Slash.wav");
+		Game.soundManager.play();
+	}
+	
+	public void playBlockSound()
+	{
+		Game.soundManager.setSound("Alert2.wav");
+		Game.soundManager.play();
+	}
+	
+	public boolean battleWon() //only works for monk2 for now...
+	{
+		return OverWorld.monk2.health <= 0;
+	}
+
 	public void loadResources()
 	{
 		//get each image, then scale each image

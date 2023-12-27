@@ -294,13 +294,13 @@ public class Rect
 		return (topBound <= y && y < bottomBound) && (leftBound <= x && x < rightBound);
 	}
 	
-	public void knockBack(Rect r)
+	public void knockBack(Rect r, int amount)
 	{
-		if(wasAbove  (r)) r.goDN(20);
-		if(wasBelow  (r)) r.goUP(20);
+		if(wasAbove  (r)) r.goDN(amount);
+		if(wasBelow  (r)) r.goUP(amount);
 
-		if(wasLeftOf (r)) r.goRT(20);
-		if(wasRightOf(r)) r.goLT(20);	
+		if(wasLeftOf (r)) r.goRT(amount);
+		if(wasRightOf(r)) r.goLT(amount);	
 	}
 	
 	public void bounceV()			

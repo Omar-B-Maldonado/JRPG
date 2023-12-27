@@ -91,7 +91,7 @@ public class Game extends InputHandler implements Runnable
 		pause        = new Pause();
 		over		 = new GameOver();
 		
-		//start the game in the playState
+		//start the game in the mainMenu state
 		stateManager.pushState(mainMenu);
 		
 		gameThread   = new Thread(this);
