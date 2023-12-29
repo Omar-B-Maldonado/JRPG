@@ -76,16 +76,33 @@ public class Player extends Entity
 	    move();  
 	}
 	
-	public void draw(Graphics pen) 
-	{
-		sprite.draw(pen);
-    }
-	
 	public void move()
 	{
 		sprite.applyFriction();
 		sprite.move();
 	}
+	
+	public void handleCollisions()
+	{
+		//player collides with skeletons
+	    for (int i = 0; i < OverWorld.skeleton.length; i++) 
+	    {
+	    	if (OverWorld.skeleton[i] != null && this.sprite.overlaps(OverWorld.skeleton[i].sprite))
+	    	{
+	    		this.sprite.pushOutOf(OverWorld.skeleton[i].sprite);
+	    	}
+	    }
+	    //player collides with skellington
+	    if (OverWorld.skellington != null && this.sprite.overlaps(OverWorld.skellington.sprite)) this.sprite.pushOutOf(OverWorld.skellington.sprite);
+	    
+	    //player collides with monk2
+	    if (OverWorld.monk2       != null && this.sprite.overlaps(      OverWorld.monk2.sprite)) this.sprite.pushOutOf(      OverWorld.monk2.sprite);
+	}
+	
+	public void draw(Graphics pen) 
+	{
+		sprite.draw(pen);
+    }
 	
 	//THIS WILL BE MOVED TO AN OVERWORLD UI CLASS IN THE FUTURE//
 	public void drawHeartContainers(Graphics pen)

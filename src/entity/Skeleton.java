@@ -74,6 +74,26 @@ public class Skeleton extends Entity
 		sprite.move();
 	}
 	
+	public void handleCollisions()
+	{
+		//skele collides w/ player
+    	if (this.sprite.overlaps(OverWorld.player.sprite)) this.sprite.pushOutOf(OverWorld.player.sprite);
+    	
+    	//skele collides with other skeles
+    	for (int j = 0; j < OverWorld.skeleton.length; j++) 
+        {
+            if (this != OverWorld.skeleton[j] && OverWorld.skeleton[j]!= null && this.sprite.overlaps(OverWorld.skeleton[j].sprite)) 
+            {
+                this.sprite.pushOutOf(OverWorld.skeleton[j].sprite);
+            }
+        }
+    	//skele collides w/ monk
+    	if (OverWorld.monk2       != null && this.sprite.overlaps(OverWorld.monk2.sprite)) 		 this.sprite.pushOutOf(OverWorld.monk2.sprite);
+        	
+    	//skele collides w/ skellington
+    	if (OverWorld.skellington != null && this.sprite.overlaps(OverWorld.skellington.sprite)) this.sprite.pushOutOf(OverWorld.skellington.sprite);
+	}
+	
 	double distanceFromPlayer;
 	
 	public boolean isInRangeOfPlayer(int upperBound, int lowerBound)

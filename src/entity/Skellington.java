@@ -58,6 +58,24 @@ public class Skellington extends Entity
 		sprite.move();
 	}
 	
+	public void handleCollisions()
+	{
+		//skellington collides with monk2
+    	if (OverWorld.monk2 != null && this.sprite.overlaps( OverWorld.monk2.sprite)) this.sprite.pushOutOf(OverWorld.monk2.sprite);
+ 	    
+    	//skellington collides with player
+    	if				    (this.sprite.overlaps(OverWorld.player.sprite)) this.sprite.pushOutOf(OverWorld.player.sprite);
+    	
+    	//skellington collides with skeletons
+	    for (int i = 0; i < OverWorld.skeleton.length; i++) 
+	    {
+	    	if (OverWorld.skeleton[i] != null && this.sprite.overlaps(OverWorld.skeleton[i].sprite))
+	    	{
+	    		this.sprite.pushOutOf(OverWorld.skeleton[i].sprite);
+	    	}
+	    }
+	}
+	
 	double distanceFromPlayer;
 	
 	public boolean isInRangeOfPlayer(int upperBound, int lowerBound)

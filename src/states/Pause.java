@@ -12,9 +12,11 @@ public class Pause extends InputHandler implements GameState
 	
 	GameState previousState;
 	
+	//TO DO: PAUSE ALL SHOTCOOLDOWN TIMERS WHEN GAME PAUSES
+	
 	public Pause()
 	{
-
+		
 	}
 	
 	@Override
@@ -35,6 +37,7 @@ public class Pause extends InputHandler implements GameState
 		//pause player
 		OverWorld.player.sprite.setMoving(false);
 		
+		//pause bullets
 		OverWorld.bulletManager.pauseBullets();
 		
 		//pause skeletons

@@ -48,7 +48,8 @@ public class Battle extends InputHandler implements GameState
 	Animation currentAnimation;
 	boolean animationFinished;
 	
-	//NEED TO FIX ARROW IMMEDATELY GOING DOWN AFTER PRESSING ENTER AGAIN SOMETIMES AND NO ATTACK HAPPENS
+	//NEED TO FIX ARROW IMMEDATELY GOING DOWN AFTER PRESSING ENTER AGAIN SOMETIMES AND NO ATTACK HAPPENS 
+	
 	public Battle() 
 	{
 		loadResources();

@@ -29,13 +29,13 @@ public class GameOver extends InputHandler implements GameState
 		if (pressing[ENTER]) 
 		{
 			Game.soundManager.setSound("Success1.wav");
-			Game.soundManager.play();
+			Game.soundManager.play     				();
 			
-			Game.soundManager.stopMusic();
+			Game.soundManager.stopMusic				();
 			
-			Game.stateManager.popState();//gets rid of game over screen
-			Game.stateManager.popState();//gets rid of old overWorld
-			Game.stateManager.pushState(Game.overWorld); //pushes new overWorld
+			Game.stateManager.popState 				();	//gets rid of game over screen
+			Game.stateManager.popState 				();	//gets rid of old overWorld
+			Game.stateManager.pushState(Game.overWorld);//pushes new overWorld
 		}
 		
 	}

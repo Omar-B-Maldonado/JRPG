@@ -20,24 +20,22 @@ import main.*;
 
 public class OverWorld extends InputHandler implements GameState
 {
-	GameStateManager stateManager;
-	public static BulletManager 	bulletManager;
-	Battle battle;
-	Pause   pause;
-	Camera camera;
+				GameStateManager  stateManager;
+	public static  BulletManager bulletManager;
 	
-	//instantiate in Game class
-	Dialogue dialogue = new Dialogue();
+	Dialogue dialogue;
+	Battle   battle;
+	Camera   camera;
+	Pause    pause;
+	
 	
 	Image background; Image backgroundScaled;
 	
-	public static Entity enemy;
+	public static Entity enemy; //for battle reference
 	
-	
-	
-	public static Player   player;
-	public static Monk2    monk2;
-	public static Skeleton[] skeleton = new Skeleton[4];
+	public static Player      player;
+	public static Monk2       monk2;
+	public static Skeleton[]  skeleton = new Skeleton[4];
 	public static Skellington skellington;
 	
 	//  for testing  //
@@ -52,18 +50,17 @@ public class OverWorld extends InputHandler implements GameState
 	public void init() 
 	{
 		stateManager  = Game.stateManager;
+		dialogue	  = Game.dialogue;
 		battle        = Game.battle;
 		pause         = Game.pause;
 		
 		//instantiate entities
-		player        = new   Player(400, 600);
-		monk2         = new    Monk2(200, 300);
-		
-		skeleton[0]   = new Skeleton(130, 240);
-		skeleton[1]   = new Skeleton(265, 240);
-		skeleton[2]   = new Skeleton(130, 300);
-		skeleton[3]   = new Skeleton(265, 300);
-		
+		player        = new   Player   (400, 600);
+		monk2         = new    Monk2   (200, 300);
+		skeleton[0]   = new Skeleton   (130, 240);
+		skeleton[1]   = new Skeleton   (265, 240);
+		skeleton[2]   = new Skeleton   (130, 300);
+		skeleton[3]   = new Skeleton   (265, 300);
 		skellington   = new Skellington(220, 350);
 		
 		bulletManager = new BulletManager();
@@ -89,97 +86,32 @@ public class OverWorld extends InputHandler implements GameState
 		inDialogueState = false;
 		
 		if (pressing[_P]) stateManager.pushState (pause);
-		  
-	    //--------------------------------PLAYER MOVEMENT AND COLLISION---------//
+		 
 	    player.update();
-	    
-	    //player collides with skeletons
-	    for (int i = 0; i < skeleton.length; i++) 
-	    {
-	    	if (skeleton[i] != null && player.sprite.overlaps(skeleton[i].sprite))
-	    	{
-	    		player.sprite.pushOutOf(skeleton[i].sprite);
-	    	}
-	    }
-	    //player collides with skellington
-	    if (skellington != null && player.sprite.overlaps(skellington.sprite)) player.sprite.pushOutOf(skellington.sprite);
-	    
-	    //player collides with monk2
-	    if (monk2       != null && player.sprite.overlaps(      monk2.sprite)) player.sprite.pushOutOf(      monk2.sprite);
-	    //---------------------------------------------------------------------//
-	 	  
-	    
-	    //--------------------------SKELLINGTON MOVEMENT AND COLLISION---------//
+	    player.handleCollisions();
+	 	     
 	    if (skellington != null) 
 	    {
-	    	skellington.update();
-	    	
-	    	//skellington collides with monk2
-	    	if (monk2 != null && skellington.sprite.overlaps( monk2.sprite)) skellington.sprite.pushOutOf(monk2.sprite);
-	 	    
-	    	//skellington collides with player
-	    	if				    (skellington.sprite.overlaps(player.sprite)) skellington.sprite.pushOutOf(player.sprite);
-	    	
-	    	//skellington collides with skeletons
-		    for (int i = 0; i < skeleton.length; i++) 
-		    {
-		    	if (skeleton[i] != null && skellington.sprite.overlaps(skeleton[i].sprite))
-		    	{
-		    		skellington.sprite.pushOutOf(skeleton[i].sprite);
-		    	}
-		    }
-	    	//handle player talks to skellington
-	 	    if (player.sprite.isInTalkingRangeOf(skellington.sprite) && player.sprite.isFacing(skellington.sprite) && pressing[ENTER] && !pressCooldown.isRunning())
-	 	    {
-	 	    	skellington.sprite.face(player.sprite);
-	 	    	enemy = skellington;
-	 	    	stateManager.pushState(dialogue);
-	 	    	inDialogueState = true;
-	 	    }
+	    	skellington.update			();
+	    	skellington.handleCollisions();
+	    	handleDialogueFor(skellington);
 	    }
-	    //---------------------------------------------------------------//
 	    
-	    //---------------------------- MONK2 -------------------------// 
 	    if (monk2 != null) 
 	    {
-	    	monk2.update();
-	    	
-	    	//handle player talks to monk2
-	 	    if (player.sprite.isInTalkingRangeOf(monk2.sprite) && player.sprite.isFacing(monk2.sprite) && pressing[ENTER] && !pressCooldown.isRunning())
-	 	    {
-	 	    	monk2.sprite.face(player.sprite);
-	 	    	enemy = monk2;
-	 	    	stateManager.pushState(dialogue);
-	 	    	inDialogueState = true;
-	 	    }
+	    	monk2.update		  ();	
+	    	handleDialogueFor(monk2);
 	    }	
-	    //-----------------------------------------------------------//
 	    
-	    //---------------------SKELETON MOVEMENT AND COLLISION-----------------------//
 	    for (int i = 0; i < skeleton.length; i++)
 	    {
 	    	if (skeleton[i]!= null) 
 	    	{
 	    		skeleton[i].update();
-	    	
-		    	//skeles collide w/ player
-		    	if (skeleton[i].sprite.overlaps(player.sprite)) skeleton[i].sprite.pushOutOf(player.sprite);
-		    	
-		    	//skeletons collide with each other
-		    	for (int j = 0; j < skeleton.length; j++) 
-	            {
-	                if (i != j && skeleton[j]!= null && skeleton[i].sprite.overlaps(skeleton[j].sprite)) 
-	                {
-	                    skeleton[i].sprite.pushOutOf(skeleton[j].sprite);
-	                }
-	            }
-		    	//skeles collide w/ monk
-		    	if (monk2 != null && skeleton[i].sprite.overlaps(monk2.sprite)) skeleton[i].sprite.pushOutOf(monk2.sprite);
-	            	
-		    	//skeles collide w/ skellington
-		    	if (skellington != null && skeleton[i].sprite.overlaps(skellington.sprite)) skeleton[i].sprite.pushOutOf(skellington.sprite);
+		    	skeleton[i].handleCollisions();
 	    	}
 	    }
+	    
 	    bulletManager.updateBullets();
 	    updateCamera();
 	  }
@@ -216,13 +148,22 @@ public class OverWorld extends InputHandler implements GameState
 	
 	public void updateCamera()
 	{
-		//Camera.setPosition((int)player.sprite.x + (int)(player.sprite.w / 2) - (int)(Game.SCREEN_WIDTH / 2), (int)player.sprite.y + (int)(player.sprite.h / 2) - (int)(Game.SCREEN_HEIGHT / 2));
-		
 		double targetX = (int) player.sprite.x + (int) (player.sprite.w / 2) - (int) (Game.SCREEN_WIDTH / 2);
 	    double targetY = (int) player.sprite.y + (int) (player.sprite.h / 2) - (int) (Game.SCREEN_HEIGHT / 2);
 
 	    //gradually move the camera towards the target position
 	    Camera.setPosition(Camera.x + (targetX - Camera.x) * 0.1, Camera.y + (targetY - Camera.y) * 0.1);
 	    
+	}
+	
+	public void handleDialogueFor(Entity npc)
+	{
+		if (player.sprite.isInTalkingRangeOf(npc.sprite) && player.sprite.isFacing(npc.sprite) && pressing[ENTER] && !pressCooldown.isRunning())
+ 	    {
+ 	    	npc.sprite.face(player.sprite);
+ 	    	enemy = npc;
+ 	    	stateManager.pushState(dialogue);
+ 	    	inDialogueState = true;
+ 	    }
 	}
 }

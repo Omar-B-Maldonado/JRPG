@@ -48,7 +48,8 @@ public class Dialogue extends InputHandler implements GameState
 	
 	Image faceset = null;
 	int soundCue;
-	
+	//NEED TO MAKE IT SO OPTION SWITCHING ISNT ALLOWED AND SOUND FOR IT
+	//DOESN'T PLAY UNLESS THE TEXT IS FULLY REVEALED
 	//-----------------------------------------------------------------------------------
 	
 	public void setDialogue() 

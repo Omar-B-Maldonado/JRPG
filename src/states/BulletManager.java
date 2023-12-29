@@ -2,13 +2,9 @@ package states;
 
 import java.awt.Graphics;
 
-import javax.swing.Timer;
-
 import engine.Sprite;
-import entity.Monk2;
 import entity.Player;
 import entity.Skeleton;
-import entity.Skellington;
 import main.Game;
 
 public class BulletManager 
@@ -21,8 +17,6 @@ public class BulletManager
 	
 	Player     player;
 	Skeleton[] skelet;
-	Monk2		monk2;
-	Skellington skell;
 	
 	
 	GameOver gameOver;
@@ -32,8 +26,6 @@ public class BulletManager
 		gameOver = Game.over;
 		player   = OverWorld.player;
 		skelet   = OverWorld.skeleton;
-		monk2    = OverWorld.monk2;
-		skell    = OverWorld.skellington;
 	}
 	
 	public void createPlayerBullet(Sprite q, int vx, int vy, String sound)
@@ -100,7 +92,7 @@ public class BulletManager
 		{
 			if (skelet[i] != null && playerBullet[k] != null && playerBullet[k].overlaps(skelet[i].sprite))
 			{
-				playerBullet[k].knockBack(skelet[i].sprite, 40);
+				playerBullet[k].knockBack(skelet[i].sprite, 25);
     			
     			skelet[i].move();	
     			
@@ -115,10 +107,10 @@ public class BulletManager
 	            {if (i != j && skelet[j]!= null && skelet[i].sprite.overlaps(skelet[j].sprite)) skelet[i].sprite.pushOutOf(skelet[j].sprite);}
 		    	
 		    	//skeles collide w/ monk
-		    	if (monk2 != null && skelet[i].sprite.overlaps(monk2.sprite)) skelet[i].sprite.pushOutOf(monk2.sprite);
+		    	if (OverWorld.monk2 != null && skelet[i].sprite.overlaps(OverWorld.monk2.sprite)) skelet[i].sprite.pushOutOf(OverWorld.monk2.sprite);
 	            	
 		    	//skeles collide w/ skellington
-		    	if (skell != null && skelet[i].sprite.overlaps(skell.sprite)) skelet[i].sprite.pushOutOf(skell.sprite);
+		    	if (OverWorld.skellington != null && skelet[i].sprite.overlaps(OverWorld.skellington.sprite)) skelet[i].sprite.pushOutOf(OverWorld.skellington.sprite);
     			
     			playerBullet[k] = null;
     				skelet[i].subtractHealth(1);
@@ -131,13 +123,27 @@ public class BulletManager
 	{
 		if (OverWorld.skellington != null && playerBullet[k] != null && playerBullet[k].overlaps(OverWorld.skellington.sprite))
 			{
-				playerBullet[k].knockBack(OverWorld.skellington.sprite, 40);
+				playerBullet[k].knockBack(OverWorld.skellington.sprite, 25);
     			
-				OverWorld.skellington.sprite.move();
-				OverWorld.skellington.sprite.applyFriction();
+				OverWorld.skellington.move();
     			
     			Game.soundManager.setSound("Kill.wav");
     			Game.soundManager.play();
+    			
+    			//skellington collides with monk2
+    	    	if (OverWorld.monk2 != null && OverWorld.skellington.sprite.overlaps( OverWorld.monk2.sprite)) OverWorld.skellington.sprite.pushOutOf(OverWorld.monk2.sprite);
+    	 	    
+    	    	//skellington collides with player
+    	    	if				    (OverWorld.skellington.sprite.overlaps(player.sprite)) OverWorld.skellington.sprite.pushOutOf(player.sprite);
+    	    	
+    	    	//skellington collides with skeletons
+    		    for (int i = 0; i < skelet.length; i++) 
+    		    {
+    		    	if (skelet[i] != null && OverWorld.skellington.sprite.overlaps(skelet[i].sprite))
+    		    	{
+    		    		OverWorld.skellington.sprite.pushOutOf(skelet[i].sprite);
+    		    	}
+    		    }
     			
     			playerBullet[k] = null;
     			OverWorld.skellington.subtractHealth(1);

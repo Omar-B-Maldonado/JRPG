@@ -14,11 +14,9 @@ public class Game extends InputHandler implements Runnable
 {	
 	private static final int ORIGINAL_SCREEN_WIDTH  = 256;
 	private static final int ORIGINAL_SCREEN_HEIGHT = 192;
-	
-	public  static final int SCALE 					= 3;
-	
-	public  static final int SCREEN_WIDTH   		= ORIGINAL_SCREEN_WIDTH  * SCALE; //256 x 3 = 768
-	public  static final int SCREEN_HEIGHT  		= ORIGINAL_SCREEN_HEIGHT * SCALE; //192 x 3 = 576
+	public  static final int SCALE 					= 	3;
+	public  static final int 		  SCREEN_WIDTH  = ORIGINAL_SCREEN_WIDTH  * SCALE; //256 x 3 = 768
+	public  static final int 		  SCREEN_HEIGHT = ORIGINAL_SCREEN_HEIGHT * SCALE; //192 x 3 = 576
 	
 	private       Thread           gameThread;
 	
@@ -28,6 +26,7 @@ public class Game extends InputHandler implements Runnable
 	
 	public static MainMenu  	   mainMenu;
 	public static OverWorld 	   overWorld;
+	public static Dialogue		   dialogue;
 	public static Battle    	   battle;
 	public static Pause     	   pause;
 	public static GameOver		   over;
@@ -36,14 +35,14 @@ public class Game extends InputHandler implements Runnable
 	
 	int mouseX = -1;
 	int mouseY = -1;
-	//=======================================================================================
+	
 	public Game()
 	{
 		setTitle("JRPG Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-		setResizable(false);
-		setLocationRelativeTo(null);			 //centers the frame
+		setResizable		 (false);
+		setLocationRelativeTo(null );
 		
 		setBackground(Color.GREEN);
 
@@ -53,11 +52,11 @@ public class Game extends InputHandler implements Runnable
 		requestFocus();	
 		
 		setUndecorated(true);
-		setShape(new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)); //removes rounded corners
+		setShape   (new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));//removes rounded corners
 		
-		//makes a new panel that paints based on the game's state
-		statePanel   = new GameStatePanel(SCREEN_WIDTH, SCREEN_HEIGHT);
-		add(statePanel);	 //adds the panel to the frame
+		
+		statePanel = new GameStatePanel(SCREEN_WIDTH, SCREEN_HEIGHT); //makes a new panel that paints based on the game's state
+		add(statePanel);	 										  //adds the panel to the frame
 		
 		init();
 		
@@ -81,15 +80,16 @@ public class Game extends InputHandler implements Runnable
 		
 		//make a state manager that communicates with the panel we made
 		stateManager = new GameStateManager();
-		soundManager = new SoundManager();
+		soundManager = new SoundManager	   ();
 		
 		
 		//create game states
-		mainMenu     = new MainMenu();
+		mainMenu     = new MainMenu ();
 		overWorld    = new OverWorld();
-		battle       = new Battle();
-		pause        = new Pause();
-		over		 = new GameOver();
+		dialogue     = new Dialogue ();
+		battle       = new Battle   ();
+		pause        = new Pause    ();
+		over		 = new GameOver ();
 		
 		//start the game in the mainMenu state
 		stateManager.pushState(mainMenu);
@@ -110,7 +110,6 @@ public class Game extends InputHandler implements Runnable
 			catch(Exception x)  {					  }
 		}
 	}
-	//=====================================================================================
 	
 	public static void main(String args[])
 	{
