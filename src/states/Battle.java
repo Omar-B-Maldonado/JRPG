@@ -46,7 +46,7 @@ public class Battle extends InputHandler implements GameState
 	Animation double_slash;
 	Animation shield;
 	Animation currentAnimation;
-	boolean animationFinished;
+	public static boolean animationFinished;
 	
 	//NEED TO FIX ARROW IMMEDATELY GOING DOWN AFTER PRESSING ENTER AGAIN SOMETIMES AND NO ATTACK HAPPENS 
 	
@@ -76,8 +76,8 @@ public class Battle extends InputHandler implements GameState
 		Game.soundManager.loadMusic("Tension.wav");
 		Game.soundManager.playMusic();
 		
-		double_slash = new Animation("res/battle attacks/", "double_slash", 4, 5);
-		shield       = new Animation("res/battle attacks/", "shield"      , 6, 3);
+		double_slash 	  = new Animation("res/battle attacks/", "double_slash", 4, 4);
+		shield       	  = new Animation("res/battle attacks/", "shield"      , 6, 3);
 		currentAnimation  = null;
 		animationFinished = true; //no animation is playing at the start
 		
@@ -99,9 +99,8 @@ public class Battle extends InputHandler implements GameState
 	    	  playHitSound();
 	    	  OverWorld.monk2.hitFor(1);
 	    	  hBarWidth -= 10;
-	    	  System.out.println(OverWorld.monk2.health); 
 	    	  
-	    	  
+	    	  //System.out.println(OverWorld.monk2.health); 	  
 	      }
 	      
 	      if (UI.choice.equals("defend") && animationFinished)
@@ -110,21 +109,9 @@ public class Battle extends InputHandler implements GameState
 	    	  animationFinished = false;
 	    	  
 	    	  playBlockSound();
-	    	  
 	      }
-      }
-      else if (battleWon())
-      {
-    	  OverWorld.monk2 = null;
-    	  OverWorld.pressCooldown.start();
-    	  
-    	  Game.soundManager.stopMusic();
-    	  Game.soundManager.loadMusic("Fight.wav");
-    	  Game.soundManager.playMusic();
-    	  
-    	  stateManager.popState();
-    	  stateManager.popState();
-      }
+      } 
+      else if (battleWon()) handleBattleWon();
 	}
 	
 	@Override
@@ -141,8 +128,7 @@ public class Battle extends InputHandler implements GameState
 			{
 				animationFinished = true;
 				UI.setChoice("");
-			}
-			
+			}	
 		}
 		
 		pen.drawImage(NimaAttackScaled, 15 * Game.SCALE, 35 * Game.SCALE, null);
@@ -186,6 +172,19 @@ public class Battle extends InputHandler implements GameState
 	public boolean battleWon() //only works for monk2 for now...
 	{
 		return OverWorld.monk2.health <= 0;
+	}
+	
+	public void handleBattleWon()
+	{
+	  OverWorld.monk2 = null; //THIS WILL NEED TO BE FIXED TO WORK WITH OTHER ENEMIES
+  	  OverWorld.pressCooldown.start();
+  	  
+  	  Game.soundManager.stopMusic();
+  	  Game.soundManager.loadMusic("Fight.wav");
+  	  Game.soundManager.playMusic();
+  	  
+  	  stateManager.popState();//gets rid of battle
+  	  stateManager.popState();//gets rid of underlying dialogue
 	}
 
 	public void loadResources()

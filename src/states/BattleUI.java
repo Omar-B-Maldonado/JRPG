@@ -53,9 +53,10 @@ public class BattleUI extends InputHandler
 	
 	int arrowX;
 	int arrowY;
-	//-----------------------------------------------------------------
-	//NEW CODE
-	String choice = "";
+	
+	boolean bumpSoundPlayed;
+	
+	String choice;
 	
 	public BattleUI() 
 	{
@@ -108,9 +109,9 @@ public class BattleUI extends InputHandler
 		itemButtonImage   =   itemButtonUnpressedScaled;
 		attackButtonImage = attackButtonUnpressedScaled;
 		defendButtonImage = defendButtonUnpressedScaled;
+		
+		bumpSoundPlayed = false;
 	}
-	
-	boolean bumpSoundPlayed = false; 
 	
 	public void update() 
 	{
@@ -125,7 +126,7 @@ public class BattleUI extends InputHandler
 	      if (optionSwitchAllowed) handleOptions();
 	      
 	      //-------------------------HANDLE BUTTON PRESS RESPONSE------------------------
-	      if (!pressing[ENTER] && !buttonRefreshTimer.isRunning()) choiceAllowed = true;
+	      if (!pressing[ENTER] && Battle.animationFinished) choiceAllowed = true;
 	      
 	      if (choiceAllowed && (arrowOnItem()) && pressing[ENTER]) 
 	      {
@@ -136,7 +137,7 @@ public class BattleUI extends InputHandler
 	    	  arrowY = itemButtonY - 8 * Game.SCALE;
 	    	  arrowBobTimer.stop();
 	    	  
-	    	  buttonRefreshTimer.start();
+	    	  buttonRefreshTimer.restart();
 	      }
 	      
 	      else if (choiceAllowed && (arrowOnDefend()) && pressing[ENTER]) 
@@ -148,7 +149,7 @@ public class BattleUI extends InputHandler
 	    	  arrowY = defendButtonY - 8 * Game.SCALE;
 	    	  arrowBobTimer.stop();
 	    	  
-	    	  buttonRefreshTimer.start();
+	    	  buttonRefreshTimer.restart();
 	      }
 	      
 	      else if (choiceAllowed && (arrowOnAttack()) && pressing[ENTER]) 
@@ -160,7 +161,7 @@ public class BattleUI extends InputHandler
 	    	  arrowY = attackButtonY - 8 * Game.SCALE;
 	    	  arrowBobTimer.stop();
 	    	  
-	    	  buttonRefreshTimer.start();
+	    	  buttonRefreshTimer.restart();
 	      }
 	      //---------------------------------------------------------------------------
 	}
@@ -221,6 +222,12 @@ public class BattleUI extends InputHandler
 			  }
 		  	  	optionSwitchAllowed = false;
 	      }
+	}
+	
+	public boolean choiceAllowed()
+	{
+		if (!pressing[ENTER] && !buttonRefreshTimer.isRunning() && Battle.animationFinished) return true;
+		else return false;
 	}
 	
 	public void setChoice(String choice) {this.choice = choice;}
