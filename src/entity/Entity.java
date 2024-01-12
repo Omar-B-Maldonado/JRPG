@@ -24,6 +24,12 @@ public abstract class Entity extends InputHandler
 	public int health;
 	public boolean damaged;
 	
+	int hBarContainerWidth;
+	int hBarContainerX;
+	int hBarContainerY;
+	int hBarWidth;
+	int hBarTo1DamageFactor;
+	
 	//for shooting
 	String[] projectilePose = {""   ,    ""};
 	
@@ -67,4 +73,13 @@ public abstract class Entity extends InputHandler
         shotCooldown.start();
         sprite.face(s);
 	}
+	
+	public void hitFor(int amount)
+	{
+		health -= amount;
+		damaged = true;
+		hBarWidth -= amount * hBarTo1DamageFactor;
+	}
+	
+	
 }

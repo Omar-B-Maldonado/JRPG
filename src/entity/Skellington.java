@@ -14,13 +14,6 @@ import states.OverWorld;
 
 public class Skellington extends Entity
 {
-	int hBarContainerWidth;
-	int hBarContainerX;
-	int hBarContainerY;
-	int hBarWidth;
-	
-	int hBarTo1DamageFactor = 4;
-	
 	public Skellington(int x, int y)
 	{
 		originX = x; originY = y;
@@ -32,11 +25,13 @@ public class Skellington extends Entity
 		spawnNode    = new Rect(originX, originY, 1, 1);
 		sprite       = new Sprite("skeleton", pose, 4, (int)x, (int)y, (int)size, (int)size);
 		
-		hBarWidth          = health * hBarTo1DamageFactor;
-		hBarContainerWidth = hBarWidth + 4;
 		
-		hBarContainerX = (int)sprite.x + 4;
-		hBarContainerY = (int)sprite.y - 15;
+		hBarWidth           = 24;
+		hBarContainerWidth  = hBarWidth + 4;
+		hBarContainerX      = (int)sprite.x + 4;
+		hBarContainerY      = (int)sprite.y - 15;
+		
+		hBarTo1DamageFactor = hBarWidth / health;
 	}
 	public void update()
 	{
@@ -85,15 +80,6 @@ public class Skellington extends Entity
 	public boolean isAwayFromPlayerByMoreThan(int upperBound)
 	{
 		return (distanceFromPlayer > upperBound);
-	}
-	
-	public void setDamaged(boolean value) {damaged = value;}
-	
-	public void subtractHealth(int amount) 
-	{
-		health    -= amount;
-		setDamaged(true);
-		hBarWidth -= hBarTo1DamageFactor;
 	}
 	
 	public void draw(Graphics pen)

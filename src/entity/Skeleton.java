@@ -15,17 +15,12 @@ import states.OverWorld;
 
 public class Skeleton extends Entity
 {
-	int hBarContainerWidth;
-	int hBarContainerX;
-	int hBarContainerY;
-	int hBarWidth;
-	
-	int hBarTo1DamageFactor = 4;
 	
 	public Skeleton(int x, int y)
 	{
 		originX = x; originY = y;
-		health       =   6;
+		
+		health       =    6;
 		walkSpeed    =  2.5;
 		dashSpeed    =  3.0;
 		size         = 40.0;
@@ -40,11 +35,13 @@ public class Skeleton extends Entity
 			@Override public void actionPerformed(ActionEvent e) {shotCooldown.stop();}
         });
 		
-		hBarWidth          = health * hBarTo1DamageFactor;
-		hBarContainerWidth = hBarWidth + 4;
 		
-		hBarContainerX = (int)sprite.x + 4;
-		hBarContainerY = (int)sprite.y - 15;
+		hBarWidth           = 24;
+		hBarContainerWidth  = hBarWidth + 4;
+		hBarContainerX      = (int)sprite.x + 4;
+		hBarContainerY      = (int)sprite.y - 15;
+		
+		hBarTo1DamageFactor = hBarWidth / health;
 	}
 	public void update()
 	{
@@ -103,15 +100,6 @@ public class Skeleton extends Entity
 	public boolean isAwayFromPlayerByMoreThan(int upperBound)
 	{
 		return (distanceFromPlayer > upperBound);
-	}
-	
-	public void setDamaged(boolean value) {damaged = value;}
-	
-	public void subtractHealth(int amount) 
-	{
-		health    -= amount;
-		setDamaged(true);
-		hBarWidth -= hBarTo1DamageFactor;
 	}
 	
 	public void draw(Graphics pen)

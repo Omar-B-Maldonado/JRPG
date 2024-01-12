@@ -37,10 +37,10 @@ public class Battle extends InputHandler implements GameState
 	Image healthBox;				Image healthBoxScaled;
 	Image dialogueBox;				Image dialogueBoxScaled;
 	
-	int hBarWidth;
-	int hBarContainerX;
-	int hBarContainerY;
-	int hBarContainerWidth;
+//	int hBarWidth;
+//	int hBarContainerX;
+//	int hBarContainerY;
+//	int hBarContainerWidth;
 	
 	
 	Animation double_slash;
@@ -48,7 +48,10 @@ public class Battle extends InputHandler implements GameState
 	Animation currentAnimation;
 	public static boolean animationFinished;
 	
-	//NEED TO FIX ARROW IMMEDATELY GOING DOWN AFTER PRESSING ENTER AGAIN SOMETIMES AND NO ATTACK HAPPENS 
+	//NEED ATTACK TIMER AND ATTACK FOR MONK 
+	Timer enemyAttTimer;
+	
+	//NEED ATTACK TIMER AND ATTACK FOR MONK 
 	
 	public Battle() 
 	{
@@ -65,13 +68,8 @@ public class Battle extends InputHandler implements GameState
 		{
 			bg    = bgPlainsDuskScaled;
 			enemy =  Monk2AttackScaled;
+			enemyAttTimer = OverWorld.monk2.attTimer;
 		}
-		
-		hBarContainerX = 496;
-		hBarContainerY =  76;
-		
-		hBarWidth      = 200;
-		hBarContainerWidth = hBarWidth + 8;
 		
 		Game.soundManager.loadMusic("Tension.wav");
 		Game.soundManager.playMusic();
@@ -81,16 +79,20 @@ public class Battle extends InputHandler implements GameState
 		currentAnimation  = null;
 		animationFinished = true; //no animation is playing at the start
 		
+		if (enemyAttTimer != null) enemyAttTimer.start();
+		
 		UI.init();
 	}
 
 	@Override
 	public void update() 
 	{		    
-      if (!battleWon())
+		   if (battleWon ()) handleBattleWon ();
+      else if (battleLost()) handleBattleLost();
+      else
       {
     	  UI.update();
-	      
+    	  
 	      if (UI.choice.equals("attack") && animationFinished) 
 	      {
 	    	  currentAnimation  = double_slash;
@@ -98,7 +100,6 @@ public class Battle extends InputHandler implements GameState
 	    	  
 	    	  playHitSound();
 	    	  OverWorld.monk2.hitFor(1);
-	    	  hBarWidth -= 10;
 	    	  
 	    	  //System.out.println(OverWorld.monk2.health); 	  
 	      }
@@ -110,8 +111,9 @@ public class Battle extends InputHandler implements GameState
 	    	  
 	    	  playBlockSound();
 	      }
-      } 
-      else if (battleWon()) handleBattleWon();
+	      
+	      if (enemyAttTimer != null && !enemyAttTimer.isRunning()) enemyAttTimer.restart();
+      }
 	}
 	
 	@Override
@@ -144,17 +146,11 @@ public class Battle extends InputHandler implements GameState
 		}
 		
 		UI.render(pen);
+
+		OverWorld.player.drawHealth(pen); //MAYBE GIVE PLAYER A SEPARATE HEALTH FOR BATTLES??
 		
-		OverWorld.player.drawHeartContainers(pen);
-		OverWorld.player.drawHearts         (pen);
-		
-		//health bar container
-		pen.setColor(Color.DARK_GRAY);
-		pen.fillRoundRect(hBarContainerX, hBarContainerY, hBarContainerWidth, 20, 15, 15);
-		
-		//health bar
-		pen.setColor(Color.MAGENTA);
-		pen.fillRoundRect(hBarContainerX + 4, hBarContainerY + 4, hBarWidth, 12, 15, 15);
+		OverWorld.monk2.drawBattleHealth(pen);
+		OverWorld.monk2.drawAttackTimer(pen);	
 	}
 	
 	public void playHitSound()
@@ -174,6 +170,11 @@ public class Battle extends InputHandler implements GameState
 		return OverWorld.monk2.health <= 0;
 	}
 	
+	public boolean battleLost()
+	{
+		return OverWorld.player.health <= 0;
+	}
+	
 	public void handleBattleWon()
 	{
 	  OverWorld.monk2 = null; //THIS WILL NEED TO BE FIXED TO WORK WITH OTHER ENEMIES
@@ -185,6 +186,13 @@ public class Battle extends InputHandler implements GameState
   	  
   	  stateManager.popState();//gets rid of battle
   	  stateManager.popState();//gets rid of underlying dialogue
+	}
+	
+	public void handleBattleLost()
+	{
+		stateManager.popState();
+		stateManager.popState();
+		stateManager.pushState(Game.over);
 	}
 
 	public void loadResources()

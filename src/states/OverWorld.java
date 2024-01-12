@@ -31,7 +31,7 @@ public class OverWorld extends InputHandler implements GameState
 	
 	Image background; Image backgroundScaled;
 	
-	public static Entity enemy; //for battle reference
+	public static Entity	  enemy; //for battle reference
 	
 	public static Player      player;
 	public static Monk2       monk2;
@@ -139,11 +139,7 @@ public class OverWorld extends InputHandler implements GameState
         //draw skellington health bar
         if 	   (skellington != null && skellington.damaged) skellington.drawHealthBar(pen);
         
-        if (!inDialogueState) //DRAW UI
-        {
-        	player.drawHeartContainers(pen);
-            player.drawHearts		  (pen);
-        }
+        if (!inDialogueState) player.drawHealth(pen);
 	}
 	
 	public void updateCamera()

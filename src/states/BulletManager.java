@@ -18,12 +18,8 @@ public class BulletManager
 	Player     player;
 	Skeleton[] skelet;
 	
-	
-	GameOver gameOver;
-	
 	public BulletManager()
 	{
-		gameOver = Game.over;
 		player   = OverWorld.player;
 		skelet   = OverWorld.skeleton;
 	}
@@ -113,7 +109,7 @@ public class BulletManager
 		    	if (OverWorld.skellington != null && skelet[i].sprite.overlaps(OverWorld.skellington.sprite)) skelet[i].sprite.pushOutOf(OverWorld.skellington.sprite);
     			
     			playerBullet[k] = null;
-    				skelet[i].subtractHealth(1);
+    				skelet[i].hitFor(2);
     			if (skelet[i].health < 1) skelet[i] = null;
 			}
 		}
@@ -146,7 +142,7 @@ public class BulletManager
     		    }
     			
     			playerBullet[k] = null;
-    			OverWorld.skellington.subtractHealth(1);
+    			OverWorld.skellington.hitFor(1);
     			if (OverWorld.skellington.health < 1) OverWorld.skellington = null;
 			}
 	}
@@ -161,7 +157,7 @@ public class BulletManager
 			skeletBullet[k] = null;
 			player.health--;
 			
-			if (player.health < 1) Game.stateManager.pushState(gameOver);
+			if (player.health <= 0) Game.stateManager.pushState(Game.over);
 		}
 	}
 	

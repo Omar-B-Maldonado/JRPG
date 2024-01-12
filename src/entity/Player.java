@@ -133,7 +133,12 @@ public class Player extends Entity
 		}
 		heartX = 10 * Game.SCALE;
 	}
-	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
+	
+	public void drawHealth(Graphics pen)
+	{
+		drawHeartContainers(pen);
+		drawHearts(pen);
+	}
 	
 	public void fireBullet(Sprite r, int vx, int vy)
 	{
