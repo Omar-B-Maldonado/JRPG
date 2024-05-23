@@ -23,10 +23,10 @@ public class Skeleton extends Entity
 		health       =    6;
 		walkSpeed    =  2.5;
 		dashSpeed    =  3.0;
-		size         = 40.0;
+		size         =   40;
 		
 		spawnNode    = new Rect(originX, originY, 1, 1);
-		sprite       = new Sprite("skeleton", pose, 4, (int)x, (int)y, (int)size, (int)size);
+		sprite       = new Sprite("skeleton", pose, 4, x, y, size, size);
 		
 		bulletVelocity = 5;
 		cooldownTime   = 600;
@@ -34,7 +34,6 @@ public class Skeleton extends Entity
 		{ 
 			@Override public void actionPerformed(ActionEvent e) {shotCooldown.stop();}
         });
-		
 		
 		hBarWidth           = 24;
 		hBarContainerWidth  = hBarWidth + 4;
@@ -77,11 +76,11 @@ public class Skeleton extends Entity
     	if (this.sprite.overlaps(OverWorld.player.sprite)) this.sprite.pushOutOf(OverWorld.player.sprite);
     	
     	//skele collides with other skeles
-    	for (int j = 0; j < OverWorld.skeleton.length; j++) 
+    	for (int j = 0; j < OverWorld.skeletons.length; j++) 
         {
-            if (this != OverWorld.skeleton[j] && OverWorld.skeleton[j]!= null && this.sprite.overlaps(OverWorld.skeleton[j].sprite)) 
+            if (this != OverWorld.skeletons[j] && OverWorld.skeletons[j]!= null && this.sprite.overlaps(OverWorld.skeletons[j].sprite)) 
             {
-                this.sprite.pushOutOf(OverWorld.skeleton[j].sprite);
+                this.sprite.pushOutOf(OverWorld.skeletons[j].sprite);
             }
         }
     	//skele collides w/ monk

@@ -16,7 +16,7 @@ public abstract class Entity extends InputHandler
 	public double speed;
 	public double walkSpeed;
 	public double dashSpeed;
-	public double size;
+	public int size;
 	public static String[] pose = {"UP", "DN", "LT", "RT"};
 	
 	public Rect spawnNode;
@@ -56,9 +56,7 @@ public abstract class Entity extends InputHandler
 	}
 	
 	public void fireAt(Sprite s) 
-	{	
-		
-		
+	{		
 		double rise  = s.y + (s.h / 2) - this.sprite.y - (this.sprite.h / 2);
 	    double run   = s.x + (s.w / 2) - this.sprite.x - (this.sprite.w / 2);
 	    

@@ -23,16 +23,16 @@ public class Player extends Entity
 	
 	Image heartContainer;
 	Image fullHeart;
-	int   heartX;
-	int   heartY;
+	
+	int   heartX, heartY;
 	
 	public Player(int x, int y)
 	{	
 		originX = x; originY = y;
 		walkSpeed    =  3.0;
 		dashSpeed    =  5.5;
-		size         = 40.0;
-		sprite       = new Sprite("nima", pose, 4, (int)x, (int)y, (int)size, (int)size);
+		size         =   40;
+		sprite       = new Sprite("nima", pose, 4, x, y, size, size);
 		
 		bulletVelocity = 7;
 		cooldownTime = 400;
@@ -85,13 +85,11 @@ public class Player extends Entity
 	public void handleCollisions()
 	{
 		//player collides with skeletons
-	    for (int i = 0; i < OverWorld.skeleton.length; i++) 
+	    for (Skeleton s : OverWorld.skeletons) if (s != null && this.sprite.overlaps(s.sprite))
 	    {
-	    	if (OverWorld.skeleton[i] != null && this.sprite.overlaps(OverWorld.skeleton[i].sprite))
-	    	{
-	    		this.sprite.pushOutOf(OverWorld.skeleton[i].sprite);
-	    	}
+	    	this.sprite.pushOutOf(s.sprite);
 	    }
+	    
 	    //player collides with skellington
 	    if (OverWorld.skellington != null && this.sprite.overlaps(OverWorld.skellington.sprite)) this.sprite.pushOutOf(OverWorld.skellington.sprite);
 	    

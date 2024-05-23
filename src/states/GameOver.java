@@ -10,11 +10,6 @@ import main.*;
 public class GameOver extends InputHandler implements GameState
 {	
 	
-	public GameOver()
-	{
-		
-	}
-	
 	@Override
 	public void init() 
 	{
@@ -37,7 +32,6 @@ public class GameOver extends InputHandler implements GameState
 			Game.stateManager.popState 				();	//gets rid of old overWorld
 			Game.stateManager.pushState(Game.overWorld);//pushes new overWorld
 		}
-		
 	}
 
 	@Override
@@ -52,6 +46,5 @@ public class GameOver extends InputHandler implements GameState
 		pen.drawString("press enter to restart", 252, 350);
 		
 	}
-
 }
 

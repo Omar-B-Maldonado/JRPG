@@ -19,10 +19,9 @@ public class Monk2 extends Entity
 	{	
 		walkSpeed  = 3.0;
 		dashSpeed  = 6.0;
-		size       = 40.0;
-		sprite     = new Sprite("monk2", Entity.pose, 1, (int)x, (int)y, 40, 40);
-		health     = 40;
-		
+		size       =  40;
+		sprite     = new Sprite("monk2", Entity.pose, 1, x, y, size, size);
+		health     =  40;
 		
 		hBarContainerX     = 496;
 		hBarContainerY     =  76;

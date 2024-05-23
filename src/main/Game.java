@@ -18,20 +18,18 @@ public class Game extends InputHandler implements Runnable
 	public  static final int 		  SCREEN_WIDTH  = ORIGINAL_SCREEN_WIDTH  * SCALE; //256 x 3 = 768
 	public  static final int 		  SCREEN_HEIGHT = ORIGINAL_SCREEN_HEIGHT * SCALE; //192 x 3 = 576
 	
-	private       Thread           gameThread;
-	
 	public static GameStatePanel   statePanel;
 	public static GameStateManager stateManager;
 	public static     SoundManager soundManager;
+
+	public static GameState mainMenu,
+							overWorld, 
+							dialogue, 
+							battle, 
+							pause, 
+							over;
 	
-	public static MainMenu  	   mainMenu;
-	public static OverWorld 	   overWorld;
-	public static Dialogue		   dialogue;
-	public static Battle    	   battle;
-	public static Pause     	   pause;
-	public static GameOver		   over;
-	
-	public static Font 			   customFont;
+	public static Font customFont;
 	
 	int mouseX = -1;
 	int mouseY = -1;
@@ -75,13 +73,11 @@ public class Game extends InputHandler implements Runnable
 		    //register the font
 		    ge.registerFont(customFont);
 		} 
-		catch(IOException         e) {e.printStackTrace();}
-		catch(FontFormatException e) {e.printStackTrace();}
+		catch(Exception e) {e.printStackTrace();}
 		
 		//make a state manager that communicates with the panel we made
 		stateManager = new GameStateManager();
 		soundManager = new SoundManager	   ();
-		
 		
 		//create game states
 		mainMenu     = new MainMenu ();
@@ -94,8 +90,7 @@ public class Game extends InputHandler implements Runnable
 		//start the game in the mainMenu state
 		stateManager.pushState(mainMenu);
 		
-		gameThread   = new Thread(this);
-		gameThread.start();
+		new Thread(this).start();
 	}
 	
 	public void run()
@@ -106,8 +101,8 @@ public class Game extends InputHandler implements Runnable
 			stateManager.update();
 			statePanel.repaint ();
 			
-			try					{gameThread.sleep(15);} //~60fps
-			catch(Exception x)  {					  }
+			try					{Thread.sleep(15);} //~60fps
+			catch(Exception x)  {/* DO NOTHING; */}
 		}
 	}
 	

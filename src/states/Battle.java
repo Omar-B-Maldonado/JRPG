@@ -37,21 +37,12 @@ public class Battle extends InputHandler implements GameState
 	Image healthBox;				Image healthBoxScaled;
 	Image dialogueBox;				Image dialogueBoxScaled;
 	
-//	int hBarWidth;
-//	int hBarContainerX;
-//	int hBarContainerY;
-//	int hBarContainerWidth;
-	
-	
 	Animation double_slash;
 	Animation shield;
 	Animation currentAnimation;
 	public static boolean animationFinished;
 	
-	//NEED ATTACK TIMER AND ATTACK FOR MONK 
 	Timer enemyAttTimer;
-	
-	//NEED ATTACK TIMER AND ATTACK FOR MONK 
 	
 	public Battle() 
 	{
@@ -184,12 +175,16 @@ public class Battle extends InputHandler implements GameState
   	  Game.soundManager.loadMusic("Fight.wav");
   	  Game.soundManager.playMusic();
   	  
+  	  if (enemyAttTimer != null && enemyAttTimer.isRunning()) enemyAttTimer.stop();
+  	  
   	  stateManager.popState();//gets rid of battle
   	  stateManager.popState();//gets rid of underlying dialogue
 	}
 	
 	public void handleBattleLost()
 	{
+		if (enemyAttTimer != null && enemyAttTimer.isRunning()) enemyAttTimer.stop();
+		
 		stateManager.popState();
 		stateManager.popState();
 		stateManager.pushState(Game.over);

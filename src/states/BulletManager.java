@@ -21,7 +21,7 @@ public class BulletManager
 	public BulletManager()
 	{
 		player   = OverWorld.player;
-		skelet   = OverWorld.skeleton;
+		skelet   = OverWorld.skeletons;
 	}
 	
 	public void createPlayerBullet(Sprite q, int vx, int vy, String sound)

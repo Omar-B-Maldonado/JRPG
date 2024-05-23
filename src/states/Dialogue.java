@@ -24,8 +24,7 @@ public class Dialogue extends InputHandler implements GameState
 	GameState			   battle;
 	
 	//Window
-	int     x; int      y;
-	int width; int height;
+	int x, y, width, height;
 	
 	String dialogues[] = new String[6];
 	String currentDialogue = "";
@@ -167,12 +166,12 @@ public class Dialogue extends InputHandler implements GameState
 	{
 		if (displayingOptions && pressing[_A] && !pressing[_D]) 
 		{
-			if (selected == yes || selected == null) playOptionSwitchedSound();
+			if (selected == yes || selected == null) playSound("OptionSwitched");
 			selected = no;
 		}
 		if (displayingOptions && pressing[_D] && !pressing[_A]) 
 		{
-			if (selected == no  || selected == null) playOptionSwitchedSound();
+			if (selected == no  || selected == null) playSound("OptionSwitched");
 			selected = yes;
 		}
 		if (selected != null) drawSelectedBox = true;
@@ -183,7 +182,7 @@ public class Dialogue extends InputHandler implements GameState
 			{
 				letterByLetter.stop();
 				text = currentDialogue; //reveals full text
-				playDialogueSkippedSound();
+				playSound("DialogueSkipped");
 				pressCooldown.restart();
 			}
 			else if (!displayingOptions) 
@@ -199,14 +198,14 @@ public class Dialogue extends InputHandler implements GameState
 			{
 				if (selected == yes) 
 				{
-					playYesSound();
+					playSound("Yes");
 					
 					Game.soundManager.stopMusic();
 					stateManager.pushState(battle);
 				}
 				if (selected ==  no) 
 				{
-					playNoSound();
+					playSound("No");
 					speak();
 				}
 			}
@@ -236,27 +235,9 @@ public class Dialogue extends InputHandler implements GameState
 		}
 	}
 	
-	public void playDialogueSkippedSound()
+	public void playSound(String fileName)
 	{
-		Game.soundManager.setSound("Voice4.wav");
-		Game.soundManager.play();
-	}
-	
-	public void playOptionSwitchedSound()
-	{
-		Game.soundManager.setSound("Menu2.wav");
-		Game.soundManager.play();
-	}
-	
-	public void playYesSound()
-	{
-		Game.soundManager.setSound("Accept2.wav");
-		Game.soundManager.play();
-	}
-	
-	public void playNoSound()
-	{
-		Game.soundManager.setSound("Success2.wav");
+		Game.soundManager.setSound(fileName + ".wav");
 		Game.soundManager.play();
 	}
 	
@@ -274,7 +255,7 @@ public class Dialogue extends InputHandler implements GameState
 			OverWorld.bulletManager.pauseBullets();
 			
 			//pause skeletons
-			for (int i = 0; i < OverWorld.skeleton.length; i++) if (OverWorld.skeleton[i]!= null) OverWorld.skeleton[i].sprite.setMoving(false);
+			for (int i = 0; i < OverWorld.skeletons.length; i++) if (OverWorld.skeletons[i]!= null) OverWorld.skeletons[i].sprite.setMoving(false);
 			
 			//pause skellington
 			if (OverWorld.skellington != null) OverWorld.skellington.sprite.setMoving(false);
@@ -318,7 +299,6 @@ public class Dialogue extends InputHandler implements GameState
 		pen.drawRect(x+(17 + 120)*Game.SCALE, y+12*Game.SCALE, 38 * Game.SCALE, 38 * Game.SCALE);	
 	}
 	//------------------------------ DRAW METHODS ----------------------------------
-	
 }
 	
 	

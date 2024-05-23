@@ -2,13 +2,9 @@ package engine;
 
 import java.awt.*;
 
-import entity.Player;
-import states.OverWorld;
-
 public class Rect 
 {
-	public double	x; public double y;											//the top left corner of an axis-aligned rectangle
-	public double	w; public double h;											//the width and height of a rectangle
+	public double x, y, w ,h;								//the x, y, width, and height of a rectangle
 	
 	double vx = 0;											//velocity in the x-direction
 	double vy = 0;											//velocity in the y-direction
@@ -17,66 +13,54 @@ public class Rect
 	
 	boolean held = false;
 	
-	//------------------------------------------------------//
-	
-	public Rect(int x, int y, int w, int h)					//rectangle constructor
+	public Rect(int x, int y, int w, int h)					
 	{
 		this.x = x;	this.y = y;
 		
 		this.w = w;	this.h = h;
 	}
 	
-	public Rect(int x, int y, int w, int h, Color c)					//rectangle constructor
+	public Rect(int x, int y, int w, int h, Color c)
 	{
 		this(x, y, w, h);
 		
 		setColor(c);
 	}
 	
-	//------------------------------------------------------//
-	
-	public boolean contains(int mx, int my)					//checks if the passed mouse pressed
-	{														//(x, y) coordinates are inside this rect
+	//checks if the passed mouse coordinates are inside this Rect
+	public boolean contains(int mx, int my)
+	{														
 		return	(
-		
-		(mx > this.x		 ) &&
-		(mx < this.x + this.w) &&
-		
-		(my > this.y		 ) &&
-		(my < this.y + this.h)
-		
-				);
+			(mx > this.x		 ) &&
+			(mx < this.x + this.w) &&
+			
+			(my > this.y		 ) &&
+			(my < this.y + this.h)
+		);
 	}
 	
-	//------------------------------------------------------//
-	
-	public boolean overlaps(Rect r) 						//checks if the passed Rect overlaps this rectangle
+	//checks if this Rect overlaps the passed Rect r
+	public boolean overlaps(Rect r) 						
 	{
 		return (
 		
-		(r.x		<= this.x + this.w)	&&					
-		(r.x + r.w  >= this.x		 )	&&					
+			(r.x		<= this.x + this.w)	&&					
+			(r.x + r.w  >= this.x		 )	&&					
+			
+			(r.y		<= this.y + this.h)	&&					
+			(r.y + r.h  >= this.y         )						
 		
-		(r.y		<= this.y + this.h)	&&					
-		(r.y + r.h  >= this.y         )						
-		
-				);
+		);
 	}
-	
-	//------------------------------------------------------//
 	
 	public void physicsOFF()
 	{
 		this.setVelocity(0, 0);
 	}
 	
-	//------------------------------------------------------//
-	
 	public void grab() 				{held = true;}
 	
 	public void drop() 				{held = false;}
-	
-	//------------------------------------------------------//
 	
 	public void resizeBy(int dw, int dh)
 	{
@@ -85,23 +69,18 @@ public class Rect
 		h += dh;
 	}
 	
-	//------------------------------------------------------//
-	
 	public void setX(double x) 		{this.x = x;}
 		
 	public void setY(double y)		{this.y = y;}
 	
 	public void setPosition(double x, double y)
 	{
-		this.x = x;
-		this.y = y;
+		setX(x);
+		setY(y);
 	}
-	
-	//------------------------------------------------------//
 		
 	public void setColor(Color c)	{this.c = c;}
 	
-	//------------------------------------------------------//
 	
 	public void setVelocity(int vx, int vy)
 	{
@@ -127,7 +106,7 @@ public class Rect
 		y += vy;
 	}
 	
-	public void jump(int dy)										//for moving via velocity change
+	public void jump(int dy)								//for moving via velocity change
 	{
 		vy -= dy;
 	}

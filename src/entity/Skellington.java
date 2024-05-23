@@ -17,13 +17,13 @@ public class Skellington extends Entity
 	public Skellington(int x, int y)
 	{
 		originX = x; originY = y;
-		health       =   6;
+		health       =    6;
 		walkSpeed    =  2.0;
 		dashSpeed    =  2.6;
-		size         = 40.0;
+		size         =   40;
 		
 		spawnNode    = new Rect(originX, originY, 1, 1);
-		sprite       = new Sprite("skeleton", pose, 4, (int)x, (int)y, (int)size, (int)size);
+		sprite       = new Sprite("skeleton", pose, 4, x, y, size, size);
 		
 		
 		hBarWidth           = 24;
@@ -62,11 +62,11 @@ public class Skellington extends Entity
     	if				    (this.sprite.overlaps(OverWorld.player.sprite)) this.sprite.pushOutOf(OverWorld.player.sprite);
     	
     	//skellington collides with skeletons
-	    for (int i = 0; i < OverWorld.skeleton.length; i++) 
+	    for (int i = 0; i < OverWorld.skeletons.length; i++) 
 	    {
-	    	if (OverWorld.skeleton[i] != null && this.sprite.overlaps(OverWorld.skeleton[i].sprite))
+	    	if (OverWorld.skeletons[i] != null && this.sprite.overlaps(OverWorld.skeletons[i].sprite))
 	    	{
-	    		this.sprite.pushOutOf(OverWorld.skeleton[i].sprite);
+	    		this.sprite.pushOutOf(OverWorld.skeletons[i].sprite);
 	    	}
 	    }
 	}
