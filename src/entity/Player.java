@@ -18,8 +18,8 @@ import states.*;
 public class Player extends Entity
 {
 	public static final int halfWidth = 8;
-	public final int screenX   = Game.SCREEN_WIDTH  / 2 - halfWidth;
-	public final int screenY   = Game.SCREEN_HEIGHT / 2 - halfWidth;
+	public final int screenX   = Game.SCREEN_HALF_WIDTH  / 2 - halfWidth;
+	public final int screenY   = Game.SCREEN_HALF_HEIGHT / 2 - halfWidth;
 	
 	public int maxHeartContainers = 4;
 	
