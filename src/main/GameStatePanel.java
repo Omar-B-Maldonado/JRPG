@@ -29,7 +29,7 @@ public class GameStatePanel extends JPanel
 		
 		if(currentState != null)
 		{
-			currentState.render(pen);
+			currentState.render((Graphics2D)pen);
 		}
 	}
 }

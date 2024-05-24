@@ -9,6 +9,7 @@ import javax.swing.Timer;
 import engine.Animation;
 import entity.Player;
 import main.*;
+import ui.BattleUI;
 
 public class Battle extends InputHandler implements GameState 
 {		
@@ -50,7 +51,6 @@ public class Battle extends InputHandler implements GameState
 		UI = new BattleUI();
 	}
 	
-	@Override
 	public void init() 
 	{
 		stateManager	  = Game.stateManager;
@@ -75,7 +75,6 @@ public class Battle extends InputHandler implements GameState
 		UI.init();
 	}
 
-	@Override
 	public void update() 
 	{		    
 		   if (battleWon ()) handleBattleWon ();
@@ -107,8 +106,7 @@ public class Battle extends InputHandler implements GameState
       }
 	}
 	
-	@Override
-	public void render(Graphics pen)
+	public void render(Graphics2D pen)
 	{
 		pen.drawImage(bg,  0, 0, null);
 		
@@ -140,7 +138,7 @@ public class Battle extends InputHandler implements GameState
 
 		OverWorld.player.drawHealth(pen); //MAYBE GIVE PLAYER A SEPARATE HEALTH FOR BATTLES??
 		
-		OverWorld.monk2.drawBattleHealth(pen);
+		OverWorld.monk2.healthBar.draw(pen);
 		OverWorld.monk2.drawAttackTimer(pen);	
 	}
 	
@@ -158,12 +156,12 @@ public class Battle extends InputHandler implements GameState
 	
 	public boolean battleWon() //only works for monk2 for now...
 	{
-		return OverWorld.monk2.health <= 0;
+		return OverWorld.monk2.currentHealth <= 0;
 	}
 	
 	public boolean battleLost()
 	{
-		return OverWorld.player.health <= 0;
+		return OverWorld.player.currentHealth <= 0;
 	}
 	
 	public void handleBattleWon()

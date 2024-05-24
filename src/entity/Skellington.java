@@ -10,28 +10,25 @@ import javax.swing.Timer;
 import engine.Camera;
 import engine.Rect;
 import engine.Sprite;
+import engine.Wall;
 import states.OverWorld;
+import ui.HealthBar;
 
 public class Skellington extends Entity
 {
 	public Skellington(int x, int y)
 	{
 		originX = x; originY = y;
-		health       =    6;
+		initializeHealth(6);
 		walkSpeed    =  2.0;
 		dashSpeed    =  2.6;
 		size         =   40;
 		
-		spawnNode    = new Rect(originX, originY, 1, 1);
+		spawnNode    = new Rect  (originX, originY, 1, 1);
 		sprite       = new Sprite("skeleton", pose, 4, x, y, size, size);
 		
-		
-		hBarWidth           = 24;
-		hBarContainerWidth  = hBarWidth + 4;
-		hBarContainerX      = (int)sprite.x + 4;
-		hBarContainerY      = (int)sprite.y - 15;
-		
-		hBarTo1DamageFactor = hBarWidth / health;
+		healthBar = new HealthBar((int)sprite.x + 4, (int)sprite.y - 15, 24, 9, 7, maxHealth);
+		healthBar.setColor(Color.GREEN);
 	}
 	public void update()
 	{
@@ -43,8 +40,7 @@ public class Skellington extends Entity
 		
 		move();
 		
-		hBarContainerX = (int)sprite.x +  4;
-		hBarContainerY = (int)sprite.y - 15;
+		healthBar.setPosition((int)sprite.x +  4, (int)sprite.y - 15);
 	}
 	
 	public void move()
@@ -55,20 +51,10 @@ public class Skellington extends Entity
 	
 	public void handleCollisions()
 	{
-		//skellington collides with monk2
-    	if (OverWorld.monk2 != null && this.sprite.overlaps( OverWorld.monk2.sprite)) this.sprite.pushOutOf(OverWorld.monk2.sprite);
- 	    
-    	//skellington collides with player
-    	if				    (this.sprite.overlaps(OverWorld.player.sprite)) this.sprite.pushOutOf(OverWorld.player.sprite);
-    	
-    	//skellington collides with skeletons
-	    for (int i = 0; i < OverWorld.skeletons.length; i++) 
-	    {
-	    	if (OverWorld.skeletons[i] != null && this.sprite.overlaps(OverWorld.skeletons[i].sprite))
-	    	{
-	    		this.sprite.pushOutOf(OverWorld.skeletons[i].sprite);
-	    	}
-	    }
+		collideWith(OverWorld.monk2);
+    	collideWith(OverWorld.player);
+    	collideWith(OverWorld.skeletons);
+	    collideWith(OverWorld.walls);
 	}
 	
 	double distanceFromPlayer;
@@ -77,6 +63,7 @@ public class Skellington extends Entity
 	{
 		return (upperBound > distanceFromPlayer && distanceFromPlayer > lowerBound);
 	}
+	
 	public boolean isAwayFromPlayerByMoreThan(int upperBound)
 	{
 		return (distanceFromPlayer > upperBound);
@@ -85,16 +72,5 @@ public class Skellington extends Entity
 	public void draw(Graphics pen)
 	{
 		sprite.draw(pen);
-	}
-	
-	public void drawHealthBar(Graphics pen)
-	{
-		//health bar container
-		pen.setColor(Color.BLACK);
-		pen.fillRoundRect(hBarContainerX     - (int)Camera.x, hBarContainerY     - (int)Camera.y, hBarContainerWidth, 9, 7, 7);
-				
-		//health bar
-		pen.setColor(Color.GREEN);
-		pen.fillRoundRect(hBarContainerX + 2 - (int)Camera.x, hBarContainerY + 2 - (int)Camera.y, hBarWidth, 5, 6, 6);		
 	}
 }

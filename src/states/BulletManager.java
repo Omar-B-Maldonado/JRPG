@@ -110,7 +110,7 @@ public class BulletManager
     			
     			playerBullet[k] = null;
     				skelet[i].hitFor(2);
-    			if (skelet[i].health < 1) skelet[i] = null;
+    			if (skelet[i].isDead()) skelet[i] = null;
 			}
 		}
 	}
@@ -143,7 +143,7 @@ public class BulletManager
     			
     			playerBullet[k] = null;
     			OverWorld.skellington.hitFor(1);
-    			if (OverWorld.skellington.health < 1) OverWorld.skellington = null;
+    			if (OverWorld.skellington.currentHealth < 1) OverWorld.skellington = null;
 			}
 	}
 	
@@ -155,9 +155,9 @@ public class BulletManager
 			Game.soundManager.play();
 			
 			skeletBullet[k] = null;
-			player.health--;
+			player.currentHealth--;
 			
-			if (player.health <= 0) Game.stateManager.pushState(Game.over);
+			if (player.isDead()) Game.stateManager.pushState(Game.over);
 		}
 	}
 	
@@ -184,6 +184,5 @@ public class BulletManager
 	{
 		for (int k = 0; k < playerBullet.length; k++) if (playerBullet[k] != null) playerBullet[k].setMoving(false);
 		for (int k = 0; k < skeletBullet.length; k++) if (skeletBullet[k] != null) skeletBullet[k].setMoving(false);
-		
 	}
 }

@@ -5,7 +5,12 @@ import java.awt.event.*;
 
 import javax.swing.JFrame;
 
-public class InputHandler extends JFrame implements KeyListener 
+import engine.Camera;
+import engine.Rect;
+import engine.Wall;
+import states.OverWorld;
+
+public class InputHandler extends JFrame implements KeyListener, MouseMotionListener, MouseListener
 {	
 	public static boolean[] pressing = new boolean[1024];
 	public static boolean[] typed    = new boolean[1024];
@@ -84,29 +89,15 @@ public class InputHandler extends JFrame implements KeyListener
 	public static int mouseX;
 	public static int mouseY;
 	
-	//------------------------------------------------------//
-	
 	public void keyPressed(KeyEvent e)
 	{
 		pressing[e.getKeyCode()] = true;
 	}
 	
-	//------------------------------------------------------//
-	
 	public void keyReleased(KeyEvent e)
 	{
 		pressing[e.getKeyCode()] = false;
 	}
-	
-	//------------------------------------------------------//
-	
-	public void keyTyped(KeyEvent e) 
-	{
-		
-	}
-	
-	//------------------------------------------------------//
-	
 	
 	//from: https://stackoverflow.com/questions/24476496/drag-and-resize-undecorated-jframe
 	
@@ -132,5 +123,57 @@ public class InputHandler extends JFrame implements KeyListener
 		});
 	}
 	
+	public void mouseMoved  (MouseEvent e){}
+	public void mouseClicked(MouseEvent e){}
+	public void mouseEntered(MouseEvent e){}	
+	public void mouseExited (MouseEvent e){}
 	
+	//TOOL FOR RESIZING RECTS BEGINS//
+		public void keyTyped(KeyEvent e)
+		{		
+			char keyChar = Character.toLowerCase(e.getKeyChar());
+			
+			if (keyChar == 'p') for (Rect wall : OverWorld.walls) System.out.println(wall);
+		}
+
+		public void mouseDragged(MouseEvent e)
+		{
+			int nx = e.getX() + (int)Camera.x;
+			int ny = e.getY() + (int)Camera.y;
+			
+			int dx = nx - Game.mouseX;
+			int dy = ny - Game.mouseY;
+			
+			for(Wall wall : OverWorld.walls) 
+			{	
+				if(wall.resizer.held) wall.resizeBy(dx,  dy);
+				else if(wall.held) wall.moveBy(dx, dy);
+			}
+			
+			Game.mouseX = nx;
+			Game.mouseY = ny;
+		}
+		
+		public void mousePressed(MouseEvent e)
+		{
+			Game.mouseX = e.getX() + (int)Camera.x;
+			Game.mouseY = e.getY() + (int)Camera.y;
+			
+			for(Wall wall : OverWorld.walls) 
+			{
+				if(wall.contains(Game.mouseX,  Game.mouseY)) wall.grab();
+				if(wall.resizer.contains(Game.mouseX,  Game.mouseY)) wall.resizer.grab();
+			}
+			System.out.println("" + Game.mouseX + ", " + Game.mouseY);
+		}
+		
+		public void mouseReleased(MouseEvent e) 
+		{
+			for(Wall wall : OverWorld.walls) 
+			{
+				wall.drop();
+				wall.resizer.drop();
+			}
+		}
+		//TOOL for RESIZING RECTS ENDS*/
 }

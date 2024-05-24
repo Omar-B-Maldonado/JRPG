@@ -103,7 +103,6 @@ public class Dialogue extends InputHandler implements GameState
 		}
 	}
 	
-	@Override
 	public void init() 
 	{
 		stateManager = Game.stateManager;
@@ -161,7 +160,6 @@ public class Dialogue extends InputHandler implements GameState
 		speak();
 	}
 
-	@Override
 	public void update() 
 	{
 		if (displayingOptions && pressing[_A] && !pressing[_D]) 
@@ -212,8 +210,7 @@ public class Dialogue extends InputHandler implements GameState
 		}
 	}
 
-	@Override
-	public void render(Graphics pen) 
+	public void render(Graphics2D pen) 
 	{
 		drawPreviousState  (pen);
 		drawDialogueWindow (pen);
@@ -243,7 +240,7 @@ public class Dialogue extends InputHandler implements GameState
 	
 	//------------------------------ DRAW METHODS ----------------------------------
 	
-	public void drawPreviousState(Graphics pen)
+	public void drawPreviousState(Graphics2D pen)
 	{
 		previousState = stateManager.getPreviousState();
 		if (previousState != null) 
@@ -264,7 +261,7 @@ public class Dialogue extends InputHandler implements GameState
 		}
 	}
 	
-	public void drawDialogueWindow(Graphics pen)
+	public void drawDialogueWindow(Graphics2D pen)
 	{
 		//draws black text box
 		pen.setColor(new Color(0, 0, 0, 210));//opaque black
@@ -276,7 +273,7 @@ public class Dialogue extends InputHandler implements GameState
 		pen.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
 	}
 	
-	public void drawText(Graphics pen) 
+	public void drawText(Graphics2D pen) 
 	{
 		pen.setFont(pen.getFont().deriveFont(Font.PLAIN, 19F));
 		
@@ -293,7 +290,7 @@ public class Dialogue extends InputHandler implements GameState
 		}
 	}
 	
-	public void drawFaceSet(Graphics pen)
+	public void drawFaceSet(Graphics2D pen)
 	{
 		pen.drawImage(faceset, x + (16 + 120) * Game.SCALE, y + 12 * Game.SCALE, null);
 		pen.drawRect(x+(17 + 120)*Game.SCALE, y+12*Game.SCALE, 38 * Game.SCALE, 38 * Game.SCALE);	

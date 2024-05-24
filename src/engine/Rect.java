@@ -11,7 +11,7 @@ public class Rect
 	
 	Color c = Color.black;									//if no-one tells us otherwise, default color is black
 	
-	boolean held = false;
+	public boolean held = false;
 	
 	public Rect(int x, int y, int w, int h)					
 	{
@@ -98,7 +98,11 @@ public class Rect
 		this.vy = vy;
 	}
 	
-	//------------------------------------------------------//
+	public void moveBy(int dx, int dy)
+	{
+		x += dx;
+		y += dy;
+	}
 	
 	public void move()										//for moving via velocity change
 	{

@@ -8,27 +8,21 @@ import engine.Rect;
 import engine.Sprite;
 import main.InputHandler;
 import states.OverWorld;
+import ui.HealthBar;
 
 public abstract class Entity extends InputHandler
 {
-	public int originX;
-	public int originY;
-	public double speed;
-	public double walkSpeed;
-	public double dashSpeed;
+	public int originX, originY;
+	public double speed, walkSpeed, dashSpeed;
 	public int size;
 	public static String[] pose = {"UP", "DN", "LT", "RT"};
 	
 	public Rect spawnNode;
 	public Sprite sprite;
-	public int health;
+	public int currentHealth;
+	public int maxHealth;
 	public boolean damaged;
-	
-	int hBarContainerWidth;
-	int hBarContainerX;
-	int hBarContainerY;
-	int hBarWidth;
-	int hBarTo1DamageFactor;
+	public HealthBar healthBar;
 	
 	//for shooting
 	String[] projectilePose = {""   ,    ""};
@@ -72,12 +66,45 @@ public abstract class Entity extends InputHandler
         sprite.face(s);
 	}
 	
+	public void initializeHealth(int maxHealth)
+	{
+		this.maxHealth = maxHealth;
+		currentHealth  = maxHealth;
+	}
+	
 	public void hitFor(int amount)
 	{
-		health -= amount;
+		currentHealth -= amount;
 		damaged = true;
-		hBarWidth -= amount * hBarTo1DamageFactor;
+		if (healthBar != null) healthBar.updateWidth(currentHealth);	
+		
+		//healthBar.width -= amount * healthBar.widthTo1DamageFactor;
 	}
 	
 	
+	public void collideWith(Rect thing)
+	{
+		if (this.sprite.overlaps(thing)) sprite.pushOutOf(thing);
+	}
+	
+	//the below 3 collision methods all call the one above
+	public void collideWith(Rect[] things) //for walls
+	{
+		for (Rect thing : things) if (thing != null) collideWith(thing);
+	}
+	
+	public void collideWith(Entity guy)
+	{
+		if (guy != null) collideWith(guy.sprite);
+	}
+	
+	public void collideWith(Entity[] entities)
+	{
+		for (Entity guy : entities) if (guy != null) collideWith(guy.sprite);
+	}
+	
+	public boolean isDead()
+	{
+		return currentHealth <= 0;
+	}
 }

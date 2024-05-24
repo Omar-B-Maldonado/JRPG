@@ -18,6 +18,9 @@ public class Game extends InputHandler implements Runnable
 	public  static final int 		  SCREEN_WIDTH  = ORIGINAL_SCREEN_WIDTH  * SCALE; //256 x 3 = 768
 	public  static final int 		  SCREEN_HEIGHT = ORIGINAL_SCREEN_HEIGHT * SCALE; //192 x 3 = 576
 	
+	public static final int SCREEN_HALF_WIDTH  = SCREEN_WIDTH  / 2;
+	public static final int SCREEN_HALF_HEIGHT = SCREEN_HEIGHT / 2;
+	
 	public static GameStatePanel   statePanel;
 	public static GameStateManager stateManager;
 	public static     SoundManager soundManager;
@@ -31,8 +34,8 @@ public class Game extends InputHandler implements Runnable
 	
 	public static Font customFont;
 	
-	int mouseX = -1;
-	int mouseY = -1;
+	public static int mouseX = -1;
+	public static int mouseY = -1;
 	
 	public Game()
 	{
@@ -44,8 +47,12 @@ public class Game extends InputHandler implements Runnable
 		
 		setBackground(Color.GREEN);
 
+		
+		//addMouseMotionListener(this);
+		//addMouseListener(this);
+		
 		addKeyListener(this);
-		allowDragging (this);
+		//allowDragging (this);
 		setFocusable  (true);
 		requestFocus();	
 		

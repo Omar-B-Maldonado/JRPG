@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class Wall extends Rect
 {
-	Rect resizer;
+	public Rect resizer;
 	
 	public Wall(int x, int y, int w, int h)
 	{
@@ -11,7 +11,7 @@ public class Wall extends Rect
 		
 		resizer = new Rect(x+w-20, y+h-20, 20, 20);
 	}
-/*	
+	
 	public void moveBy(int dx, int dy)
 	{
 		super.moveBy(dx, dy);
@@ -25,10 +25,10 @@ public class Wall extends Rect
 		
 		resizer.moveBy(dw, dh);
 	}
-*/	
+	
 	public String toString()
 	{
-		return "new Wall(" + x + ", " + y + ", " + w + ", " + h + ");";
+		return "new Wall(" + (int)x + ", " + (int)y + ", " + (int)w + ", " + (int)h + "),";
 	}
 	
 	public void draw(Graphics pen)
@@ -36,6 +36,6 @@ public class Wall extends Rect
 		pen.setColor(Color.yellow);
 		super.draw(pen);
 		
-		//resizer.draw(pen);
+		resizer.draw(pen);
 	}
 }

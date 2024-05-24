@@ -107,11 +107,11 @@ public class Sprite extends Rect
 		
 		if (!moving)
 			
-			pen.drawImage(animation[pose].getStaticImage(), (int)(x - Camera.x), (int)(y - Camera.y), (int) w, (int) h, null);
+			pen.drawImage(animation[pose].getStaticImage(), (int)Math.round(x - Camera.x), (int)Math.round(y - Camera.y), (int) w, (int) h, null);
 			
 		else
 			
-			pen.drawImage(animation[pose].getCurrentImage(), (int)(x - Camera.x), (int)(y - Camera.y), (int) w, (int) h, null);
+			pen.drawImage(animation[pose].getCurrentImage(), (int)Math.round(x - Camera.x), (int)Math.round(y - Camera.y), (int) w, (int) h, null);
 	
 	}
 

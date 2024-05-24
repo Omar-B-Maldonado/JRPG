@@ -1,4 +1,4 @@
-package states;
+package ui;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -10,6 +10,7 @@ import javax.swing.Timer;
 
 import main.Game;
 import main.InputHandler;
+import states.Battle;
 
 public class BattleUI extends InputHandler
 {	
@@ -56,7 +57,7 @@ public class BattleUI extends InputHandler
 	
 	boolean bumpSoundPlayed;
 	
-	String choice;
+	public String choice;
 	
 	public BattleUI() 
 	{

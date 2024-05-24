@@ -47,6 +47,13 @@ public class GameStateManager
 		if(!stateStack.isEmpty()) stateStack.peek().update();
 	}
 	
+	public GameState getCurrentState()
+	{
+		if(!stateStack.isEmpty()) return stateStack.peek();
+		
+		else return null;
+	}
+	
 	public GameState getPreviousState()
 	{
 		//if there are 2+ states in the stack return the index of the state underneath the top one

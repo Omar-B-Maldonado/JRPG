@@ -1,7 +1,7 @@
 package states;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.*;
 
@@ -36,8 +36,7 @@ public class MainMenu extends InputHandler implements GameState
 		
 	}
 
-	@Override
-	public void render(Graphics pen) 
+	public void render(Graphics2D pen) 
 	{
 		pen.fillRect(0, 0, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
 		pen.setColor(Color.WHITE);

@@ -10,8 +10,10 @@ import javax.swing.Timer;
 import engine.Camera;
 import engine.Rect;
 import engine.Sprite;
+import engine.Wall;
 import main.Game;
 import states.OverWorld;
+import ui.HealthBar;
 
 public class Skeleton extends Entity
 {
@@ -20,7 +22,7 @@ public class Skeleton extends Entity
 	{
 		originX = x; originY = y;
 		
-		health       =    6;
+		initializeHealth(6);
 		walkSpeed    =  2.5;
 		dashSpeed    =  3.0;
 		size         =   40;
@@ -35,12 +37,8 @@ public class Skeleton extends Entity
 			@Override public void actionPerformed(ActionEvent e) {shotCooldown.stop();}
         });
 		
-		hBarWidth           = 24;
-		hBarContainerWidth  = hBarWidth + 4;
-		hBarContainerX      = (int)sprite.x + 4;
-		hBarContainerY      = (int)sprite.y - 15;
+		healthBar = new HealthBar((int)sprite.x + 4, (int)sprite.y - 15, 24, 9, 7, maxHealth);
 		
-		hBarTo1DamageFactor = hBarWidth / health;
 	}
 	public void update()
 	{
@@ -60,8 +58,7 @@ public class Skeleton extends Entity
 		
 		move();
 		
-		hBarContainerX = (int)sprite.x +  4;
-		hBarContainerY = (int)sprite.y - 15;
+		healthBar.setPosition((int)sprite.x +  4, (int)sprite.y - 15);
 	}
 	
 	public void move()
@@ -72,22 +69,11 @@ public class Skeleton extends Entity
 	
 	public void handleCollisions()
 	{
-		//skele collides w/ player
-    	if (this.sprite.overlaps(OverWorld.player.sprite)) this.sprite.pushOutOf(OverWorld.player.sprite);
-    	
-    	//skele collides with other skeles
-    	for (int j = 0; j < OverWorld.skeletons.length; j++) 
-        {
-            if (this != OverWorld.skeletons[j] && OverWorld.skeletons[j]!= null && this.sprite.overlaps(OverWorld.skeletons[j].sprite)) 
-            {
-                this.sprite.pushOutOf(OverWorld.skeletons[j].sprite);
-            }
-        }
-    	//skele collides w/ monk
-    	if (OverWorld.monk2       != null && this.sprite.overlaps(OverWorld.monk2.sprite)) 		 this.sprite.pushOutOf(OverWorld.monk2.sprite);
-        	
-    	//skele collides w/ skellington
-    	if (OverWorld.skellington != null && this.sprite.overlaps(OverWorld.skellington.sprite)) this.sprite.pushOutOf(OverWorld.skellington.sprite);
+    	collideWith(OverWorld.player);
+    	collideWith(OverWorld.skeletons);
+    	collideWith(OverWorld.monk2);
+        collideWith(OverWorld.skellington);
+    	collideWith(OverWorld.walls);
 	}
 	
 	double distanceFromPlayer;
@@ -106,15 +92,15 @@ public class Skeleton extends Entity
 		sprite.draw(pen);
 	}
 	
-	public void drawHealthBar(Graphics pen)
-	{
-		//health bar container
-		pen.setColor(Color.BLACK);
-		pen.fillRoundRect(hBarContainerX     - (int)Camera.x, hBarContainerY     - (int)Camera.y, hBarContainerWidth, 9, 7, 7);
-				
-		//health bar
-		pen.setColor(Color.RED);
-		pen.fillRoundRect(hBarContainerX + 2 - (int)Camera.x, hBarContainerY + 2 - (int)Camera.y, hBarWidth, 5, 6, 6);
-			
-	}
+//	public void drawHealthBar(Graphics pen)
+//	{
+//		//health bar container
+//		pen.setColor(Color.BLACK);
+//		pen.fillRoundRect(hBarContainerX     - (int)Camera.x, hBarContainerY     - (int)Camera.y, hBarContainerWidth, 9, 7, 7);
+//				
+//		//health bar
+//		pen.setColor(Color.RED);
+//		pen.fillRoundRect(hBarContainerX + 2 - (int)Camera.x, hBarContainerY + 2 - (int)Camera.y, hBarWidth, 5, 6, 6);
+//			
+//	}
 }

@@ -10,14 +10,16 @@ import javax.swing.Timer;
 
 import engine.Rect;
 import engine.Sprite;
+import engine.Wall;
 import main.Game;
 import main.InputHandler;
 import states.*;
 
 public class Player extends Entity
 {
-	public final double screenX   = Game.SCREEN_WIDTH  / 2 - 8;
-	public final double screenY   = Game.SCREEN_HEIGHT / 2 - 8;
+	public static final int halfWidth = 8;
+	public final int screenX   = Game.SCREEN_WIDTH  / 2 - halfWidth;
+	public final int screenY   = Game.SCREEN_HEIGHT / 2 - halfWidth;
 	
 	public int maxHeartContainers = 4;
 	
@@ -30,7 +32,7 @@ public class Player extends Entity
 	{	
 		originX = x; originY = y;
 		walkSpeed    =  3.0;
-		dashSpeed    =  5.5;
+		dashSpeed    =  6.0;
 		size         =   40;
 		sprite       = new Sprite("nima", pose, 4, x, y, size, size);
 		
@@ -41,7 +43,7 @@ public class Player extends Entity
 			@Override public void actionPerformed(ActionEvent e) {shotCooldown.stop();}
         });
 		
-		health = maxHeartContainers * 4; //3 hearts, each with 4 quarters
+		initializeHealth(maxHeartContainers * 4);; //3 hearts, each with 4 quarters
 		
 		//THIS WILL BE MOVED TO AN OVERWORLD UI CLASS IN THE FUTURE
 		heartContainer  = Toolkit.getDefaultToolkit().getImage("res/overworld ui/heart_container.png");
@@ -63,7 +65,7 @@ public class Player extends Entity
 	        (pressing[_S] && (pressing[_A] ^ pressing[_D])) )
 	    //^ is java's XOR operator, not allowing both A and D to be pressed prevents the speed from changing when both are pressed
 	    {
-	        speed = (speed * 8/10);
+	        speed = speed *.7;
 	    }
 	    
 	    if (pressing[_W]) sprite.moveUP(speed);
@@ -84,17 +86,10 @@ public class Player extends Entity
 	
 	public void handleCollisions()
 	{
-		//player collides with skeletons
-	    for (Skeleton s : OverWorld.skeletons) if (s != null && this.sprite.overlaps(s.sprite))
-	    {
-	    	this.sprite.pushOutOf(s.sprite);
-	    }
-	    
-	    //player collides with skellington
-	    if (OverWorld.skellington != null && this.sprite.overlaps(OverWorld.skellington.sprite)) this.sprite.pushOutOf(OverWorld.skellington.sprite);
-	    
-	    //player collides with monk2
-	    if (OverWorld.monk2       != null && this.sprite.overlaps(      OverWorld.monk2.sprite)) this.sprite.pushOutOf(      OverWorld.monk2.sprite);
+	    collideWith(OverWorld.skeletons);
+	    collideWith(OverWorld.skellington);
+	    collideWith(OverWorld.monk2);
+	    collideWith(OverWorld.walls);
 	}
 	
 	public void draw(Graphics pen) 
@@ -119,10 +114,10 @@ public class Player extends Entity
 		
 		for (int i = 1; i <= maxHeartContainers; i++)
 		{
-			if (health >= i * 4) pen.drawImage(fullHeart, heartX, heartY, 16 * Game.SCALE, 16 * Game.SCALE, null);
+			if (currentHealth >= i * 4) pen.drawImage(fullHeart, heartX, heartY, 16 * Game.SCALE, 16 * Game.SCALE, null);
 			else //only draw leading heart
 			{
-				int leadingHealth  = 4 - ((i * 4) - health);
+				int leadingHealth  = 4 - ((i * 4) - currentHealth);
 				if (leadingHealth != 0) pen.drawImage(Toolkit.getDefaultToolkit().getImage("res/overworld ui/heart_" + leadingHealth + ".png"), heartX, heartY, 16 * Game.SCALE, 16 * Game.SCALE, null);
 				heartX = 10 * Game.SCALE;
 				return;
