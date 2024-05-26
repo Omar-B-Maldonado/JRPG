@@ -43,7 +43,7 @@ public class Inventory
 	 * if its amount is 1 or less, and decrements the amount afterwards */
 	public void removeItem(int slot) 
 	{
-		if(amount[slot--] <= 1) items[slot] = null;
+		if(amount[slot]-- <= 1) items[slot] = null;
 	}
 	
 	public void draw(Graphics2D pen)
