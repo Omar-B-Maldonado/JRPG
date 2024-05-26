@@ -18,11 +18,9 @@ public class Monk2 extends Entity
 	
 	public Monk2(int x, int y)
 	{	
-		walkSpeed  = 3.0;
-		dashSpeed  = 6.0;
-		size       =  40;
-		sprite     = new Sprite("monk2", Entity.pose, 1, x, y, size, size);
+		super("monk2", defaultPose, 1, x, y, defaultSize, defaultSize);
 		initializeHealth(40);
+		setSpeeds(3, 6);
 		
 		healthBar = new HealthBar(496, 76, 208, 10, 15, maxHealth);	
 		
@@ -45,7 +43,7 @@ public class Monk2 extends Entity
 	
 	public void update()
 	{
-		sprite.setPose("DN");
+		faceDN();
 	}
 	
 	public void draw(Graphics pen) 

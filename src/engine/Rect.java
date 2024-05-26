@@ -5,9 +5,9 @@ import java.awt.*;
 public class Rect 
 {
 	public double x, y, w ,h;								//the x, y, width, and height of a rectangle
-	
-	double vx = 0;											//velocity in the x-direction
-	double vy = 0;											//velocity in the y-direction
+	public double halfW, halfH;
+	public double vx = 0;									//velocity in the x-direction
+	public double vy = 0;									//velocity in the y-direction
 	
 	Color c = Color.black;									//if no-one tells us otherwise, default color is black
 	
@@ -15,9 +15,8 @@ public class Rect
 	
 	public Rect(int x, int y, int w, int h)					
 	{
-		this.x = x;	this.y = y;
-		
-		this.w = w;	this.h = h;
+		setPosition(x, y);	
+		setSize(w, h);
 	}
 	
 	public Rect(int x, int y, int w, int h, Color c)
@@ -67,6 +66,12 @@ public class Rect
 		w += dw;
 		
 		h += dh;
+	}
+	
+	public void setSize(double w, double h)
+	{
+		this.w = w; this.h = h;
+		halfW = w/2; halfH = h/2;
 	}
 	
 	public void setX(double x) 		{this.x = x;}

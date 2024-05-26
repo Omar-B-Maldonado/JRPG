@@ -20,15 +20,11 @@ public class Skeleton extends Entity
 	
 	public Skeleton(int x, int y)
 	{
-		originX = x; originY = y;
-		
+		super("skeleton", defaultPose, 4, x, y, defaultSize, defaultSize);
 		initializeHealth(6);
-		walkSpeed    =  2.5;
-		dashSpeed    =  3.0;
-		size         =   40;
+		setSpeeds(2.5, 3);
 		
 		spawnNode    = new Rect(originX, originY, 1, 1);
-		sprite       = new Sprite("skeleton", pose, 4, x, y, size, size);
 		
 		bulletVelocity = 5;
 		cooldownTime   = 600;

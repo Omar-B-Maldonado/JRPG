@@ -9,10 +9,10 @@ public class Sprite extends Rect
 {
 	Animation[] animation;
 	
-	final static int UP = 0;
-	final static int DN = 1;
-	final static int LT = 2;
-	final static int RT = 3;
+	public final int UP = 0;
+	public final int DN = 1;
+	public final int LT = 2;
+	public final int RT = 3;
 	
 	public int pose = DN;
 	
@@ -76,12 +76,12 @@ public class Sprite extends Rect
 	
 	public boolean isFacing(Sprite s)
 	{
-		if (this.isLeftOf (s) && pose == RT) return true;
-		if (this.isRightOf(s) && pose == LT) return true;
-		if (this.isAbove  (s) && pose == DN) return true;
-		if (this.isBelow  (s) && pose == UP) return true;
+		if (this.isLeftOf (s) && pose != RT) return false;
+		if (this.isRightOf(s) && pose != LT) return false;
+		if (this.isAbove  (s) && pose != DN) return false;
+		if (this.isBelow  (s) && pose != UP) return false;
 		
-		return false;
+		return true;
 	}
 	
 	public void face(Sprite s)
@@ -92,12 +92,10 @@ public class Sprite extends Rect
 		if(this.isBelow  (s)) pose = UP;
 	}
 	
-	public void setPose(String s)
+	public void setPose(int direction)
 	{
-		if (s.equals("DN")) pose = DN;
-		if (s.equals("UP")) pose = UP;
-		if (s.equals("LT")) pose = LT;
-		if (s.equals("RT")) pose = RT;
+		if (direction < 0 || direction > 3) System.out.println("Invalid Direction");
+		pose = direction;
 	}
 	
 	public void draw(Graphics pen) 

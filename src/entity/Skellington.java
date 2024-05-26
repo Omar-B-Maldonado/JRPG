@@ -18,15 +18,12 @@ public class Skellington extends Entity
 {
 	public Skellington(int x, int y)
 	{
-		originX = x; originY = y;
+		super("skeleton", defaultPose, 4, x, y, defaultSize, defaultSize);
 		initializeHealth(6);
-		walkSpeed    =  2.0;
-		dashSpeed    =  2.6;
-		size         =   40;
+		setSpeeds(2, 2.6);
 		
 		spawnNode    = new Rect  (originX, originY, 1, 1);
-		sprite       = new Sprite("skeleton", pose, 4, x, y, size, size);
-		
+	
 		healthBar = new HealthBar((int)sprite.x + 4, (int)sprite.y - 15, 24, 9, 7, maxHealth);
 		healthBar.setColor(Color.GREEN);
 	}

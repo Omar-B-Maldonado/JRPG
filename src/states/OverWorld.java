@@ -76,8 +76,7 @@ public class OverWorld extends InputHandler implements GameState
 		Game.soundManager.loadMusic("Fight.wav");
 		Game.soundManager.playMusic();
 		
-		Camera.setPosition((int)player.sprite.x + (int)(player.sprite.w / 2) - (int)(Game.SCREEN_WIDTH  / 2),
-						   (int)player.sprite.y + (int)(player.sprite.h / 2) - (int)(Game.SCREEN_HEIGHT / 2));
+		updateCamera();
 	}
 	
 	@Override
@@ -142,8 +141,8 @@ public class OverWorld extends InputHandler implements GameState
 	
 	public void updateCamera()
 	{
-		double targetX = player.sprite.x + (Player.halfWidth) - (Game.SCREEN_HALF_WIDTH);
-	    double targetY = player.sprite.y + (Player.halfWidth) - (Game.SCREEN_HALF_HEIGHT);
+		double targetX = player.sprite.x + (player.sprite.halfW) - (Game.SCREEN_HALF_WIDTH);
+	    double targetY = player.sprite.y + (player.sprite.halfH) - (Game.SCREEN_HALF_HEIGHT);
 
 	    Camera.setPosition(targetX, targetY);
 	    //gradually move the camera towards the target position:
@@ -152,7 +151,7 @@ public class OverWorld extends InputHandler implements GameState
 	
 	public void handleDialogueFor(Entity npc)
 	{
-		if (player.sprite.isInTalkingRangeOf(npc.sprite) && player.sprite.isFacing(npc.sprite) && pressing[ENTER] && !pressCooldown.isRunning())
+		if (player.isInTalkingRangeOf(npc) && player.isFacing(npc) && pressing[ENTER] && !pressCooldown.isRunning())
  	    {
  	    	npc.sprite.face(player.sprite);
  	    	enemy = npc;

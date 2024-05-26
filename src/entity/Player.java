@@ -17,10 +17,6 @@ import states.*;
 
 public class Player extends Entity
 {
-	public static final int halfWidth = 8;
-	public final int screenX   = Game.SCREEN_HALF_WIDTH  / 2 - halfWidth;
-	public final int screenY   = Game.SCREEN_HALF_HEIGHT / 2 - halfWidth;
-	
 	public int maxHeartContainers = 4;
 	
 	Image heartContainer;
@@ -30,11 +26,8 @@ public class Player extends Entity
 	
 	public Player(int x, int y)
 	{	
-		originX = x; originY = y;
-		walkSpeed    =  3.0;
-		dashSpeed    =  6.0;
-		size         =   40;
-		sprite       = new Sprite("nima", pose, 4, x, y, size, size);
+		super("nima", defaultPose, 4, x, y, defaultSize, defaultSize);
+		setSpeeds(3, 6);
 		
 		bulletVelocity = 7;
 		cooldownTime = 400;

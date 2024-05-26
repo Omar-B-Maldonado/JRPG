@@ -14,15 +14,16 @@ public abstract class Entity extends InputHandler
 {
 	public int originX, originY;
 	public double speed, walkSpeed, dashSpeed;
-	public int size;
-	public static String[] pose = {"UP", "DN", "LT", "RT"};
+	public static int defaultSize = 40;
+	public static String[] defaultPose = {"UP", "DN", "LT", "RT"};
 	
 	public Rect spawnNode;
 	public Sprite sprite;
-	public int currentHealth;
-	public int maxHealth;
-	public boolean damaged;
+	
 	public HealthBar healthBar;
+	public int currentHealth, maxHealth;
+	public boolean damaged;
+	
 	
 	//for shooting
 	String[] projectilePose = {""   ,    ""};
@@ -32,6 +33,32 @@ public abstract class Entity extends InputHandler
 	int bH = 30;	
 	public Timer shotCooldown;
 	int   		 cooldownTime;
+	
+	public Entity(String name, String[] pose, int imageCount, int x, int y, int w, int h)
+	{
+		originX = x; originY = y;
+		
+		sprite = new Sprite(name, pose, imageCount, x, y, w, h);
+	}
+	
+	public void setSpeeds(double walk, double dash)
+	{
+		walkSpeed = walk; dashSpeed = dash;
+	}
+	
+	public void faceLT() {sprite.setPose(sprite.LT);}
+	public void faceRT() {sprite.setPose(sprite.RT);}
+	public void faceDN() {sprite.setPose(sprite.DN);}
+	public void faceUP() {sprite.setPose(sprite.UP);}
+	
+	public boolean isFacing(Entity e) 
+	{
+		return this.sprite.isFacing(e.sprite);
+	}
+	public boolean isInTalkingRangeOf(Entity e)
+	{
+		return this.sprite.isInTalkingRangeOf(e.sprite);
+	}
 	
 	public void follow(Rect s, double speed)
 	{

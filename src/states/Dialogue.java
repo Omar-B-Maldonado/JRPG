@@ -13,6 +13,7 @@ import main.GameStateManager;
 import main.GameStatePanel;
 import main.InputHandler;
 import engine.Sprite;
+import entity.Entity;
 
 public class Dialogue extends InputHandler implements GameState 
 {
@@ -245,17 +246,11 @@ public class Dialogue extends InputHandler implements GameState
 		previousState = stateManager.getPreviousState();
 		if (previousState != null) 
 		{	
-			//pausePlayer
-			OverWorld.player.sprite.setMoving(false);
-			
-			//pause bullets
 			OverWorld.bulletManager.pauseBullets();
 			
-			//pause skeletons
-			for (int i = 0; i < OverWorld.skeletons.length; i++) if (OverWorld.skeletons[i]!= null) OverWorld.skeletons[i].sprite.setMoving(false);
-			
-			//pause skellington
-			if (OverWorld.skellington != null) OverWorld.skellington.sprite.setMoving(false);
+			Pause.pause(OverWorld.player);
+			Pause.pause(OverWorld.skeletons);
+			Pause.pause(OverWorld.skellington);
 			
 			previousState.render(pen);
 		}

@@ -3,6 +3,7 @@ package states;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import entity.Entity;
 import entity.Player;
 import main.*;
 
@@ -31,17 +32,10 @@ public class Pause extends InputHandler implements GameState
 
 	public void render(Graphics2D pen) 
 	{
-		//pause player
-		OverWorld.player.sprite.setMoving(false);
-		
-		//pause bullets
 		OverWorld.bulletManager.pauseBullets();
-		
-		//pause skeletons
-		for (int i = 0; i < OverWorld.skeletons.length; i++) if (OverWorld.skeletons[i] != null) OverWorld.skeletons[i].sprite.setMoving(false);
-		
-		//pause skellington
-		if (OverWorld.skellington != null) OverWorld.skellington.sprite.setMoving(false);
+		pause(OverWorld.player);
+		pause(OverWorld.skeletons);
+		pause(OverWorld.skellington);
 		
 		drawPreviousState(pen);
 		
@@ -55,6 +49,16 @@ public class Pause extends InputHandler implements GameState
 	{
 		previousState = stateManager.getPreviousState();		//gets the previous state
 		if (previousState != null) previousState.render(pen);	//renders the previous state if it exists
+	}
+	
+	public static void pause(Entity guy)
+	{
+		if (guy != null) guy.sprite.setMoving(false);
+	}
+	
+	public static void pause(Entity[] guys)
+	{
+		for (Entity guy : guys) pause(guy);
 	}
 
 }
