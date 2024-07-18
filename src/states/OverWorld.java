@@ -8,12 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.Timer;
 
 import engine.*;
 import entity.*;
 import main.*;
+import objects.Item;
+import objects.Potion;
 
 public class OverWorld extends InputHandler implements GameState
 {
@@ -35,6 +38,8 @@ public class OverWorld extends InputHandler implements GameState
 	
 	public static Wall[] walls;
 	
+	public static ArrayList<Item> worldItems;
+	
 	//  for testing  //
 	public static Timer pressCooldown;
 	int cooldownTime = 400;
@@ -48,6 +53,9 @@ public class OverWorld extends InputHandler implements GameState
 		dialogue	  = Game.dialogue;
 		battle        = Game.battle;
 		pause         = Game.pause;
+		
+		worldItems = new ArrayList<>();
+		worldItems.add(new Potion("life_pot", 400, 600));
 		
 		createWalls();
 		
@@ -75,6 +83,8 @@ public class OverWorld extends InputHandler implements GameState
 		
 		Game.soundManager.loadMusic("Fight.wav");
 		Game.soundManager.playMusic();
+		
+		
 		
 		updateCamera();
 	}
@@ -119,6 +129,8 @@ public class OverWorld extends InputHandler implements GameState
         pen.drawImage(background, - (400 * Game.SCALE) - ((int)Camera.x), - (400 * Game.SCALE) - ((int)Camera.y), 800 * Game.SCALE, 800 * Game.SCALE, null);
         
         bulletManager.drawBullets(pen);
+        
+        for (Item item : worldItems) item.draw(pen);
           
         //DRAW ENTITIES
         for (Skeleton s : skeletons) if (s != null) s.draw(pen);

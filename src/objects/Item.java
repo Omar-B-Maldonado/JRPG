@@ -8,7 +8,7 @@ import engine.Rect;
 
 public class Item extends Rect
 {
-public Image image;
+	public Image image;
 	
 	public boolean inInventory = false;
 	public boolean stackable   = false;
@@ -38,17 +38,12 @@ public Image image;
 		return stackable;
 	}
 	
-	public void setWeapon() 
-	{
-		setItemType("weapon");
-	}
-	
-	protected void setItemType(String itemType) 
+	public void setItemType(String itemType) 
 	{
 		this.itemType = itemType;
 	}
 	
-	protected void setSubType(String subType)
+	public void setSubType(String subType)
 	{
 		this.subType = subType;
 	}
@@ -66,6 +61,5 @@ public Image image;
 	public void draw(Graphics2D pen) 
 	{
 		if(!inInventory) pen.drawImage(image, (int)(x - Camera.x), (int)(y - Camera.y), (int)w, (int)h, null);
-		super.draw(pen);
 	}
 }

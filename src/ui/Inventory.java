@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.Graphics2D;
 
+import main.Game;
 import objects.Item;
 
 public class Inventory 
@@ -10,10 +11,15 @@ public class Inventory
 	public Item[] items;
 	public int[] amount;
 	
+	int numSlots = 4;
+	int slotSize = 32 * Game.SCALE; //pixels
+	int width = slotSize * numSlots;
+	int halfWidth = width/2;
+	
 	public Inventory()
 	{
-		items  = new Item[4];
-		amount = new  int[4];
+		items  = new Item[numSlots];
+		amount = new  int[numSlots];
 	}
 	
 	/* This method returns false if the item was not able to be added to the inventory.
@@ -48,6 +54,7 @@ public class Inventory
 	
 	public void draw(Graphics2D pen)
 	{
-		/* To do */
+		pen.drawRoundRect(Game.SCREEN_HALF_WIDTH - this.halfWidth, Game.SCREEN_HEIGHT - 20 - slotSize,
+						  width, slotSize, 0, 0);
 	}
 }

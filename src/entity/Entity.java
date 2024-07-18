@@ -9,6 +9,7 @@ import engine.Sprite;
 import main.InputHandler;
 import states.OverWorld;
 import ui.HealthBar;
+import ui.Inventory;
 
 public abstract class Entity extends InputHandler
 {
@@ -23,6 +24,8 @@ public abstract class Entity extends InputHandler
 	public HealthBar healthBar;
 	public int currentHealth, maxHealth;
 	public boolean damaged;
+	
+	public Inventory inventory;
 	
 	
 	//for shooting
@@ -39,7 +42,13 @@ public abstract class Entity extends InputHandler
 		originX = x; originY = y;
 		
 		sprite = new Sprite(name, pose, imageCount, x, y, w, h);
+		
+		inventory = new Inventory();
 	}
+	
+	public abstract void update();
+	public abstract void draw(Graphics pen);
+	public abstract void handleCollisions();
 	
 	public void setSpeeds(double walk, double dash)
 	{

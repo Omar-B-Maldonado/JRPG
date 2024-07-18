@@ -46,6 +46,11 @@ public class Monk2 extends Entity
 		faceDN();
 	}
 	
+	public void handleCollisions()
+	{
+		
+	}
+	
 	public void draw(Graphics pen) 
 	{      
         sprite.draw(pen);
