@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.Timer;
 
@@ -29,7 +30,7 @@ public class OverWorld extends InputHandler implements GameState
 	
 	Image background, backgroundScaled;
 	
-	public static Entity	  enemy; //for battle reference
+	private static Entity	  interactor; //for battle and dialogue reference
 	
 	public static Player      player;
 	public static Monk2       monk2;
@@ -39,6 +40,7 @@ public class OverWorld extends InputHandler implements GameState
 	public static Wall[] walls;
 	
 	public static ArrayList<Item> worldItems;
+	public static ArrayList<Entity> entities;
 	
 	//  for testing  //
 	public static Timer pressCooldown;
@@ -54,6 +56,7 @@ public class OverWorld extends InputHandler implements GameState
 		battle        = Game.battle;
 		pause         = Game.pause;
 		
+		entities   = new ArrayList<>();
 		worldItems = new ArrayList<>();
 		worldItems.add(new Potion("life_pot", 400, 600));
 		
@@ -71,6 +74,12 @@ public class OverWorld extends InputHandler implements GameState
 			new Skeleton   (265, 300)
 		};
 		
+		//add all entities to the entities array
+		entities.add(player);
+		entities.add(monk2);
+		entities.add(skellington);
+		for (Skeleton s : skeletons) entities.add(s);
+		
 		bulletManager = new BulletManager();
 			
 		background    = Toolkit.getDefaultToolkit().getImage("res/map01.png");
@@ -84,41 +93,25 @@ public class OverWorld extends InputHandler implements GameState
 		Game.soundManager.loadMusic("Fight.wav");
 		Game.soundManager.playMusic();
 		
-		
-		
 		updateCamera();
 	}
 	
 	@Override
 	public void update() 
 	{
-		enemy           = null;
+		setInteractor(null);
 		inDialogueState = false;
 		
 		if (pressing[_P]) stateManager.pushState(pause);
-		 
-	    player.update();
-	    player.handleCollisions();
-	 	     
-	    if (skellington != null) 
-	    {
-	    	skellington.update			();
-	    	skellington.handleCollisions();
-	    	handleDialogueFor(skellington);
+	    
+	    Iterator<Entity> iterator = entities.iterator();
+	    while (iterator.hasNext()) {
+	    	Entity e = iterator.next();
+	    	e.update();
+	    	e.handleCollisions();
+	    	handleDialogueFor(e);
 	    }
-	    
-	    if (monk2 != null) 
-	    {
-	    	monk2.update		  ();	
-	    	handleDialogueFor(monk2);
-	    }	
-	    
-	    for (Skeleton s : skeletons) if (s != null) 
-	    {
-	    	s.update();
-		    s.handleCollisions(); 	
-	    }
-	    
+	   
 	    bulletManager.updateBullets();
 	    updateCamera();
 	  }
@@ -133,19 +126,18 @@ public class OverWorld extends InputHandler implements GameState
         for (Item item : worldItems) item.draw(pen);
           
         //DRAW ENTITIES
-        for (Skeleton s : skeletons) if (s != null) s.draw(pen);
-        
-        if (monk2 		!= null) 	   monk2.draw(pen);
-        if (skellington != null) skellington.draw(pen);
-        player.draw(pen);
-        //------------
+        Iterator<Entity> entIterator = entities.iterator();
+	    while (entIterator.hasNext()) entIterator.next().draw(pen);
         
         //DRAW HEALTH
-        for(Skeleton s : skeletons) if (s != null && s.damaged) s.healthBar.draw(pen);
+        Iterator<Entity> healthIterator = entities.iterator();
+	    while (healthIterator.hasNext()) {
+	    	Entity e = healthIterator.next();
+	    	if (e instanceof Player || e instanceof Monk2) continue; //these dont show healthbars in overworld
+	    	if (e.damaged) e.healthBar.draw(pen);
+	    }
         
-        if (skellington != null && skellington.damaged) skellington.healthBar.draw(pen);
-        
-        if (!inDialogueState) player.drawHealth(pen);
+        if (!inDialogueState) player.drawHealth(pen); //player has heart containers!
         //-----------
         
         //for (Wall wall : walls) wall.draw(pen);
@@ -163,13 +155,22 @@ public class OverWorld extends InputHandler implements GameState
 	
 	public void handleDialogueFor(Entity npc)
 	{
+		if (!(npc instanceof Monk2) && !(npc instanceof Skellington)) return; //other npcs have no dialogue yet
+		
 		if (player.isInTalkingRangeOf(npc) && player.isFacing(npc) && pressing[ENTER] && !pressCooldown.isRunning())
  	    {
  	    	npc.sprite.face(player.sprite);
- 	    	enemy = npc;
+ 	    	setInteractor(npc);
  	    	stateManager.pushState(dialogue);
  	    	inDialogueState = true;
  	    }
+	}
+	
+	public void setInteractor(Entity e) {
+		interactor = e;
+	}
+	public static Entity getInteractor() {
+		return interactor;
 	}
 	
 	public void createWalls()

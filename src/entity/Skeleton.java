@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 
 import javax.swing.Timer;
 
@@ -57,19 +58,15 @@ public class Skeleton extends Entity
 		healthBar.setPosition((int)sprite.x +  4, (int)sprite.y - 15);
 	}
 	
-	public void move()
-	{
-		sprite.applyFriction();
-		sprite.move();
-	}
-	
 	public void handleCollisions()
 	{
-    	collideWith(OverWorld.player);
-    	collideWith(OverWorld.skeletons);
-    	collideWith(OverWorld.monk2);
-        collideWith(OverWorld.skellington);
-    	collideWith(OverWorld.walls);
+    	Iterator<Entity> iterator = OverWorld.entities.iterator();
+		while (iterator.hasNext()){
+			Entity e = iterator.next();
+			if (e == this) continue;
+			collideWith(e);
+		}
+	    collideWith(OverWorld.walls);
 	}
 	
 	double distanceFromPlayer;

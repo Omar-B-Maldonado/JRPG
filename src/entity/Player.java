@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 
 import javax.swing.Timer;
 
@@ -71,17 +72,14 @@ public class Player extends Entity
 	    move();  
 	}
 	
-	public void move()
-	{
-		sprite.applyFriction();
-		sprite.move();
-	}
-	
 	public void handleCollisions()
-	{
-	    collideWith(OverWorld.skeletons);
-	    collideWith(OverWorld.skellington);
-	    collideWith(OverWorld.monk2);
+	{ 
+	    Iterator<Entity> iterator = OverWorld.entities.iterator();
+		while (iterator.hasNext()){
+			Entity e = iterator.next();
+			if (e instanceof Player) continue;
+			collideWith(e);
+		}
 	    collideWith(OverWorld.walls);
 	}
 	
@@ -130,7 +128,7 @@ public class Player extends Entity
 	{
         OverWorld.bulletManager.createPlayerBullet(
         		new Sprite("ShurikenMagic", projectilePose, 2, 8, (int) r.x + (int)(r.w * .5) -(int)(bW * .5), (int) r.y + (int)(r.h * .5 - bH * .5), bW, bH),
-        		vx, vy, "Magic1.wav");
+        		vx, vy, "Magic1");
 	}
 	
 	private void fire() 

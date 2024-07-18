@@ -14,6 +14,8 @@ import main.GameStatePanel;
 import main.InputHandler;
 import engine.Sprite;
 import entity.Entity;
+import entity.Monk2;
+import entity.Skellington;
 
 public class Dialogue extends InputHandler implements GameState 
 {
@@ -23,6 +25,8 @@ public class Dialogue extends InputHandler implements GameState
 	GameStatePanel     statePanel;
 	GameState 		previousState;
 	GameState			   battle;
+	
+	Entity npc;
 	
 	//Window
 	int x, y, width, height;
@@ -54,7 +58,7 @@ public class Dialogue extends InputHandler implements GameState
 	
 	public void setDialogue() 
 	{
-		if (OverWorld.monk2 != null && OverWorld.enemy == OverWorld.monk2) 
+		if (npc instanceof Monk2) 
 		{
 			dialogues[0] = "Hello, lad. What is cooking?";
 			dialogues[1] = "So you've come to get a whooping?";
@@ -64,7 +68,7 @@ public class Dialogue extends InputHandler implements GameState
 			dialogues[5] = "Dang, I thought you might.";
 		}
 		
-		if (OverWorld.skellington != null && OverWorld.enemy == OverWorld.skellington) 
+		else if (npc instanceof Skellington) 
 		{
 			dialogues[0] = "Leave me alone!";
 			dialogues[1] = "I'm not like the other skeletons!";
@@ -94,7 +98,7 @@ public class Dialogue extends InputHandler implements GameState
 			dialogueIndex++;
 			
 			//add yes/no condition for certain NPCs
-			if (OverWorld.enemy  == OverWorld.monk2 && dialogueIndex == dialogues.length - 1)
+			if (npc instanceof Monk2 && dialogueIndex == dialogues.length - 1)
 			{
 				displayingOptions = true;
 			}
@@ -109,7 +113,9 @@ public class Dialogue extends InputHandler implements GameState
 		stateManager = Game.stateManager;
 		statePanel	 = Game.statePanel;
 		battle       = Game.battle;
-	
+		
+		npc = OverWorld.getInteractor();
+		
 		x = 32 * Game.SCALE;
 		y = 16 * Game.SCALE;
 		width  = Game.SCREEN_WIDTH - ((16 * Game.SCALE) * 4);
@@ -146,15 +152,13 @@ public class Dialogue extends InputHandler implements GameState
 					soundCue++;
 					if(soundCue==2) //used to delay how often the sound is played
 					{
-						Game.soundManager.setSound("Voice3.wav");
-						Game.soundManager.play();
+						playSound("Voice3");
 						soundCue = 0;
 					}
 					
 				}
 			}
 		});
-		
 		endOfDialogue = false;
 		loadFaceset();
 		setDialogue();
@@ -219,24 +223,14 @@ public class Dialogue extends InputHandler implements GameState
 		drawFaceSet        (pen);	
 	}
 	
-	public void loadFaceset() 
+	public void loadFaceset() //this can probably be optimized if we have the entities name string used
 	{
-		if (OverWorld.monk2 != null && OverWorld.enemy == OverWorld.monk2) 
-		{
-			faceset = Toolkit.getDefaultToolkit().getImage("res/facesets/monk2Faceset.png");
-			faceset = faceset.getScaledInstance(38 * Game.SCALE, 38 * Game.SCALE, Image.SCALE_FAST);
-		}
-		if (OverWorld.skellington != null && OverWorld.enemy == OverWorld.skellington) 
-		{
-			faceset = Toolkit.getDefaultToolkit().getImage("res/facesets/skellingtonFaceset.png");
-			faceset = faceset.getScaledInstance(38 * Game.SCALE, 38 * Game.SCALE, Image.SCALE_FAST);
-		}
+		faceset = Toolkit.getDefaultToolkit().getImage("res/facesets/" + npc.name + "Faceset.png");
+		faceset = faceset.getScaledInstance(38 * Game.SCALE, 38 * Game.SCALE, Image.SCALE_FAST);
 	}
 	
-	public void playSound(String fileName)
-	{
-		Game.soundManager.setSound(fileName + ".wav");
-		Game.soundManager.play();
+	public void playSound(String fileName){
+		Game.soundManager.playSound(fileName);
 	}
 	
 	//------------------------------ DRAW METHODS ----------------------------------

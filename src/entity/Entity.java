@@ -26,7 +26,7 @@ public abstract class Entity extends InputHandler
 	public boolean damaged;
 	
 	public Inventory inventory;
-	
+	public String name;
 	
 	//for shooting
 	String[] projectilePose = {""   ,    ""};
@@ -39,6 +39,7 @@ public abstract class Entity extends InputHandler
 	
 	public Entity(String name, String[] pose, int imageCount, int x, int y, int w, int h)
 	{
+		this.name = name; //for faceset
 		originX = x; originY = y;
 		
 		sprite = new Sprite(name, pose, imageCount, x, y, w, h);
@@ -53,6 +54,11 @@ public abstract class Entity extends InputHandler
 	public void setSpeeds(double walk, double dash)
 	{
 		walkSpeed = walk; dashSpeed = dash;
+	}
+	
+	public void move(){
+		sprite.applyFriction();
+		sprite.move();
 	}
 	
 	public void faceLT() {sprite.setPose(sprite.LT);}
@@ -96,7 +102,7 @@ public abstract class Entity extends InputHandler
         Sprite r     = sprite;
         
         OverWorld.bulletManager.createSkeletBullet(new Sprite("Shuriken", projectilePose, 2, 8, (int) r.x + (int)(r.w * .5) -(int)(bW * .5), (int) r.y + (int)(r.h * .5 - bH * .5), bW, bH),
-        		vx, vy, "Hit6.wav");
+        		vx, vy, "Hit6");
         
         shotCooldown.start();
         sprite.face(s);

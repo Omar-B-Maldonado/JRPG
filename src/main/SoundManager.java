@@ -22,6 +22,12 @@ public class SoundManager
             
         } catch(Exception e) {e.printStackTrace();}
     }
+    
+    public void playSound(String fileName)
+	{
+		setSound(fileName + ".wav");
+		play();
+	}
 
     public void playMusic() 
     {

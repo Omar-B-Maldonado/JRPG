@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 import engine.Animation;
+import entity.Entity;
+import entity.Monk2;
 import entity.Player;
 import main.*;
 import ui.BattleUI;
@@ -23,8 +25,9 @@ public class Battle extends InputHandler implements GameState
 	GameState 		 previousState;
 	BattleUI		 UI;
 	
-	Image bg    = null;
-	Image enemy = null;
+	Image bg         = null;
+	Image enemyImage = null;
+	Entity enemy;
 	
 	//-----------------------------------------------------------------
 	Image bgBridgeDusk;				Image bgBridgeDuskScaled;
@@ -55,11 +58,11 @@ public class Battle extends InputHandler implements GameState
 	{
 		stateManager	  = Game.stateManager;
 		
-		if (OverWorld.enemy == OverWorld.monk2) 
-		{
+		enemy = OverWorld.getInteractor();
+		if (enemy instanceof Monk2){
 			bg    = bgPlainsDuskScaled;
-			enemy =  Monk2AttackScaled;
-			enemyAttTimer = OverWorld.monk2.attTimer;
+			enemyImage    =  Monk2AttackScaled;
+			enemyAttTimer = OverWorld.monk2.attTimer; //FIX THIS
 		}
 		
 		Game.soundManager.loadMusic("Tension.wav");
@@ -110,7 +113,7 @@ public class Battle extends InputHandler implements GameState
 	{
 		pen.drawImage(bg,  0, 0, null);
 		
-		pen.drawImage(enemy, 162 * Game.SCALE, 48 * Game.SCALE, null);
+		pen.drawImage(enemyImage, 162 * Game.SCALE, 48 * Game.SCALE, null);
 		
 		if (currentAnimation != null && !animationFinished && currentAnimation == shield) 
 		{	
@@ -154,19 +157,17 @@ public class Battle extends InputHandler implements GameState
 		Game.soundManager.play();
 	}
 	
-	public boolean battleWon() //only works for monk2 for now...
-	{
-		return OverWorld.monk2.currentHealth <= 0;
+	public boolean battleWon(){
+		return enemy.currentHealth <= 0;
 	}
 	
-	public boolean battleLost()
-	{
+	public boolean battleLost(){
 		return OverWorld.player.currentHealth <= 0;
 	}
 	
 	public void handleBattleWon()
 	{
-	  OverWorld.monk2 = null; //THIS WILL NEED TO BE FIXED TO WORK WITH OTHER ENEMIES
+	  OverWorld.entities.remove(enemy);
   	  OverWorld.pressCooldown.start();
   	  
   	  Game.soundManager.stopMusic();
