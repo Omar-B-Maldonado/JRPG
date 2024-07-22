@@ -12,7 +12,7 @@ import entity.Monk2;
 import entity.Player;
 import main.*;
 import ui.BattleUI;
-
+// TODO: fix battle sprites to allow different Nima poses
 public class Battle extends InputHandler implements GameState 
 {		
 	private final int MONK2_ATTACK_SPRITE_WIDTH = 68  * Game.SCALE;
@@ -25,6 +25,7 @@ public class Battle extends InputHandler implements GameState
 	GameState 		 previousState;
 	BattleUI		 UI;
 	
+	Image currentPose;
 	Image bg         = null;
 	Image enemyImage = null;
 	Entity enemy;
@@ -33,6 +34,7 @@ public class Battle extends InputHandler implements GameState
 	Image bgBridgeDusk;				Image bgBridgeDuskScaled;
 	Image bgPlainsDusk;				Image bgPlainsDuskScaled;
 	
+	Image NimaDefend;
 	Image NimaAttack;				Image NimaAttackScaled;	
 	Image Monk2Attack;				Image Monk2AttackScaled;
 	
@@ -147,14 +149,12 @@ public class Battle extends InputHandler implements GameState
 	
 	public void playHitSound()
 	{
-		Game.soundManager.setSound("Slash.wav");
-		Game.soundManager.play();
+		Game.soundManager.playSound("Slash");
 	}
 	
 	public void playBlockSound()
 	{
-		Game.soundManager.setSound("Alert2.wav");
-		Game.soundManager.play();
+		Game.soundManager.playSound("Alert2");
 	}
 	
 	public boolean battleWon(){
@@ -203,5 +203,7 @@ public class Battle extends InputHandler implements GameState
 		
 		NimaAttack         = Toolkit.getDefaultToolkit().getImage("res/battle sprites/nima_battle_attack.png");
 		NimaAttackScaled   = NimaAttack.getScaledInstance(NIMA_ATTACK_SPRITE_WIDTH, NIMA_ATTACK_SPRITE_HEIGHT, Image.SCALE_FAST);
+		
+		NimaDefend = Toolkit.getDefaultToolkit().getImage("res/battle sprites/nima_battle_defend.png");
 	}
 }
