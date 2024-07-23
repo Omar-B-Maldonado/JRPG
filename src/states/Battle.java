@@ -3,7 +3,9 @@ package states;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
+import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import engine.Animation;
@@ -15,28 +17,23 @@ import ui.BattleUI;
 // TODO: fix battle sprites to allow different Nima poses
 public class Battle extends InputHandler implements GameState 
 {		
-	private final int MONK2_ATTACK_SPRITE_WIDTH = 68  * Game.SCALE;
-	private final int MONK2_ATTACK_SPRITE_HEIGHT= 98  * Game.SCALE;
-	
-	private final int NIMA_ATTACK_SPRITE_WIDTH  = 123 * Game.SCALE;
-	private final int NIMA_ATTACK_SPRITE_HEIGHT = 157 * Game.SCALE;
-	
 	GameStateManager stateManager;
 	GameState 		 previousState;
 	BattleUI		 UI;
 	
-	Image currentPose;
-	Image bg         = null;
-	Image enemyImage = null;
+	static Image currentPose,
+	bg         = null,
+	enemyImage = null;
+	
 	Entity enemy;
 	
 	//-----------------------------------------------------------------
-	Image bgBridgeDusk;				Image bgBridgeDuskScaled;
-	Image bgPlainsDusk;				Image bgPlainsDuskScaled;
+	static Image 
+	bgBridgeDusk, bgPlainsDusk, //backgrounds
 	
-	Image NimaDefend;
-	Image NimaAttack;				Image NimaAttackScaled;	
-	Image Monk2Attack;				Image Monk2AttackScaled;
+	NimaDefend, NimaAttack, 	//Nima's poses
+	
+	Monk2Attack;
 	
 	//-----------------------------------------------------------------
 	Image textBox;					Image textBoxScaled;
@@ -62,8 +59,8 @@ public class Battle extends InputHandler implements GameState
 		
 		enemy = OverWorld.getInteractor();
 		if (enemy instanceof Monk2){
-			bg    = bgPlainsDuskScaled;
-			enemyImage    =  Monk2AttackScaled;
+			bg    = bgPlainsDusk;
+			enemyImage    =  Monk2Attack;
 			enemyAttTimer = OverWorld.monk2.attTimer; //FIX THIS
 		}
 		
@@ -74,6 +71,8 @@ public class Battle extends InputHandler implements GameState
 		shield       	  = new Animation("res/battle attacks/", "shield"      , 6, 3);
 		currentAnimation  = null;
 		animationFinished = true; //no animation is playing at the start
+		
+		currentPose = NimaAttack;
 		
 		if (enemyAttTimer != null) enemyAttTimer.start();
 		
@@ -92,8 +91,7 @@ public class Battle extends InputHandler implements GameState
 	      {
 	    	  currentAnimation  = double_slash;
 	    	  animationFinished = false;
-	    	  
-	    	  playHitSound();
+	    	  Game.soundManager.playSound("Slash");
 	    	  OverWorld.monk2.hitFor(1);
 	    	  
 	    	  //System.out.println(OverWorld.monk2.health); 	  
@@ -103,19 +101,17 @@ public class Battle extends InputHandler implements GameState
 	      {
 	    	  currentAnimation  = shield;
 	    	  animationFinished = false;
-	    	  
-	    	  playBlockSound();
+	    	  Game.soundManager.playSound("Alert2");
 	      }
 	      
 	      if (enemyAttTimer != null && !enemyAttTimer.isRunning()) enemyAttTimer.restart();
       }
 	}
 	
-	public void render(Graphics2D pen)
-	{
+	public void render(Graphics2D pen) {
 		pen.drawImage(bg,  0, 0, null);
 		
-		pen.drawImage(enemyImage, 162 * Game.SCALE, 48 * Game.SCALE, null);
+		pen.drawImage(enemyImage, 0, 0, null);
 		
 		if (currentAnimation != null && !animationFinished && currentAnimation == shield) 
 		{	
@@ -127,7 +123,7 @@ public class Battle extends InputHandler implements GameState
 			}	
 		}
 		
-		pen.drawImage(NimaAttackScaled, 15 * Game.SCALE, 35 * Game.SCALE, null);
+		pen.drawImage(currentPose, 0, 0, null);
 
 		if (currentAnimation != null && !animationFinished && currentAnimation == double_slash) 
 		{
@@ -147,16 +143,6 @@ public class Battle extends InputHandler implements GameState
 		OverWorld.monk2.drawAttackTimer(pen);	
 	}
 	
-	public void playHitSound()
-	{
-		Game.soundManager.playSound("Slash");
-	}
-	
-	public void playBlockSound()
-	{
-		Game.soundManager.playSound("Alert2");
-	}
-	
 	public boolean battleWon(){
 		return enemy.currentHealth <= 0;
 	}
@@ -165,8 +151,7 @@ public class Battle extends InputHandler implements GameState
 		return OverWorld.player.currentHealth <= 0;
 	}
 	
-	public void handleBattleWon()
-	{
+	public void handleBattleWon() {
 	  OverWorld.entities.remove(enemy);
   	  OverWorld.pressCooldown.start();
   	  
@@ -180,30 +165,37 @@ public class Battle extends InputHandler implements GameState
   	  stateManager.popState();//gets rid of underlying dialogue
 	}
 	
-	public void handleBattleLost()
-	{
+	public void handleBattleLost() {
 		if (enemyAttTimer != null && enemyAttTimer.isRunning()) enemyAttTimer.stop();
 		
 		stateManager.popState();
 		stateManager.popState();
 		stateManager.pushState(Game.over);
 	}
+	
+	public static void setNimaPose(String pose) {
+		if      (pose == "attack") currentPose = NimaAttack;
+		else if (pose == "defend") currentPose = NimaDefend;
+	}
 
-	public void loadResources()
-	{
-		//get each image, then scale each image
-		bgBridgeDusk       = Toolkit.getDefaultToolkit().getImage("res/battle backgrounds/bridge_bg_0.png");	
-		bgBridgeDuskScaled = bgBridgeDusk.getScaledInstance(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, Image.SCALE_FAST);	
+	public void loadResources() {
+		bgBridgeDusk       = loadAndScale("battle backgrounds", "bridge_bg_0.png");	
+		bgPlainsDusk       = loadAndScale("battle backgrounds", "plains_dusk.png");	
 		
-		bgPlainsDusk       = Toolkit.getDefaultToolkit().getImage("res/battle backgrounds/plains_dusk.png");	
-		bgPlainsDuskScaled = bgPlainsDusk.getScaledInstance(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, Image.SCALE_FAST);	
+		Monk2Attack        = loadAndScale("battle sprites", "monk2_attack.png");
 		
-		Monk2Attack        = Toolkit.getDefaultToolkit().getImage("res/battle sprites/monk2_battle_attack.png");
-		Monk2AttackScaled  = Monk2Attack.getScaledInstance(MONK2_ATTACK_SPRITE_WIDTH, MONK2_ATTACK_SPRITE_HEIGHT, Image.SCALE_FAST);
-		
-		NimaAttack         = Toolkit.getDefaultToolkit().getImage("res/battle sprites/nima_battle_attack.png");
-		NimaAttackScaled   = NimaAttack.getScaledInstance(NIMA_ATTACK_SPRITE_WIDTH, NIMA_ATTACK_SPRITE_HEIGHT, Image.SCALE_FAST);
-		
-		NimaDefend = Toolkit.getDefaultToolkit().getImage("res/battle sprites/nima_battle_defend.png");
+		NimaAttack         = loadAndScale("battle sprites", "nima_attack.png");
+		NimaDefend 		   = loadAndScale("battle sprites", "nima_defend.png");
+	}
+	
+	public Image loadAndScale(String folder, String filename) {
+		URL resourceUrl = getClass().getClassLoader().getResource(folder + "/" + filename);
+		if (resourceUrl == null) {
+	        System.err.println("Resource not found: " + filename);
+	        return null;
+	    }
+		ImageIcon icon   = new ImageIcon(resourceUrl);
+		ImageIcon scaled = new ImageIcon(icon.getImage().getScaledInstance(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, Image.SCALE_FAST));
+		return scaled.getImage();
 	}
 }

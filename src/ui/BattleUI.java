@@ -125,6 +125,7 @@ public class BattleUI extends InputHandler
 	      }
 	     
 	      if (optionSwitchAllowed) handleOptions();
+	      updatePose();
 	      
 	      //-------------------------HANDLE BUTTON PRESS RESPONSE------------------------
 	      if (!pressing[ENTER] && Battle.animationFinished) choiceAllowed = true;
@@ -176,6 +177,11 @@ public class BattleUI extends InputHandler
 		pen.drawImage(arrowImage, arrowX + 9 * Game.SCALE, arrowY, null);	
 	}
 	
+	public void updatePose() {
+		if      (arrowOnAttack()) Battle.setNimaPose("attack");
+		else if (arrowOnDefend()) Battle.setNimaPose("defend");
+	}
+	
 	public void handleOptions()
 	{
 		if (pressing[_D]) 
@@ -188,6 +194,7 @@ public class BattleUI extends InputHandler
 			  }
 			  else if (arrowOnDefend()) 
 			  {
+				  Battle.setNimaPose("defend");
 				  setArrowXY(  itemButtonX,   itemButtonY); 
 				  resetArrowVMovement();
 		    	  playArrowMoveSound();
