@@ -180,6 +180,7 @@ public class BattleUI extends InputHandler
 	public void updatePose() {
 		if      (arrowOnAttack()) Battle.setNimaPose("attack");
 		else if (arrowOnDefend()) Battle.setNimaPose("defend");
+		else if (arrowOnItem())	  Battle.setNimaPose( "item" );
 	}
 	
 	public void handleOptions()
@@ -261,16 +262,14 @@ public class BattleUI extends InputHandler
 	
 	public void playArrowMoveSound()
 	{
-		Game.soundManager.setSound("Menu1.wav");
-   	  	Game.soundManager.play();
+		Game.soundManager.playSound("Menu1");
 	}
 	
 	public void playArrowBumpSound()
 	{
 		if(!bumpSoundPlayed) 
 		{
-			Game.soundManager.setSound("MiniImpact.wav");
-		    Game.soundManager.play();
+			Game.soundManager.playSound("MiniImpact");
 		    bumpSoundPlayed = true;
 		}	
 	}

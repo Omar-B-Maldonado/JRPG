@@ -29,9 +29,9 @@ public class Battle extends InputHandler implements GameState
 	
 	//-----------------------------------------------------------------
 	static Image 
-	bgBridgeDusk, bgPlainsDusk, //backgrounds
+	bgBridgeDusk, bgPlainsDusk, 		//backgrounds
 	
-	NimaDefend, NimaAttack, 	//Nima's poses
+	NimaDefend, NimaAttack, NimaItem,	//Nima's poses
 	
 	Monk2Attack;
 	
@@ -176,16 +176,18 @@ public class Battle extends InputHandler implements GameState
 	public static void setNimaPose(String pose) {
 		if      (pose == "attack") currentPose = NimaAttack;
 		else if (pose == "defend") currentPose = NimaDefend;
+		else if (pose ==  "item" ) currentPose = NimaItem;
 	}
 
 	public void loadResources() {
-		bgBridgeDusk       = loadAndScale("battle backgrounds", "bridge_bg_0.png");	
-		bgPlainsDusk       = loadAndScale("battle backgrounds", "plains_dusk.png");	
+		bgBridgeDusk = loadAndScale("battle backgrounds", "bridge_bg_0.png");	
+		bgPlainsDusk = loadAndScale("battle backgrounds", "plains_dusk.png");	
 		
-		Monk2Attack        = loadAndScale("battle sprites", "monk2_attack.png");
+		Monk2Attack	 = loadAndScale("battle sprites", "monk2_attack.png");
 		
-		NimaAttack         = loadAndScale("battle sprites", "nima_attack.png");
-		NimaDefend 		   = loadAndScale("battle sprites", "nima_defend.png");
+		NimaAttack	 = loadAndScale("battle sprites", "nima_attack.png");
+		NimaDefend	 = loadAndScale("battle sprites", "nima_defend.png");
+		NimaItem	 = loadAndScale("battle sprites", "nima_item.png");
 	}
 	
 	public Image loadAndScale(String folder, String filename) {
