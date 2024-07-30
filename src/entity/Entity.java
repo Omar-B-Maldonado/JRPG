@@ -18,6 +18,9 @@ public abstract class Entity extends InputHandler
 	public static int defaultSize = 40;
 	public static String[] defaultPose = {"UP", "DN", "LT", "RT"};
 	
+	public int attackTimerWidth;
+	public Timer attackTimer;
+	
 	public Rect spawnNode;
 	public Sprite sprite;
 	

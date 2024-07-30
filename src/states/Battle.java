@@ -45,8 +45,6 @@ public class Battle extends InputHandler implements GameState
 	Animation currentAnimation;
 	public static boolean animationFinished;
 	
-	Timer enemyAttTimer;
-	
 	public Battle() 
 	{
 		loadResources();
@@ -59,9 +57,8 @@ public class Battle extends InputHandler implements GameState
 		
 		enemy = OverWorld.getInteractor();
 		if (enemy instanceof Monk2){
-			bg    = bgPlainsDusk;
-			enemyImage    =  Monk2Attack;
-			enemyAttTimer = OverWorld.monk2.attTimer; //FIX THIS
+			bg         = bgPlainsDusk;
+			enemyImage = Monk2Attack;
 		}
 		
 		Game.soundManager.loadMusic("Tension.wav");
@@ -74,7 +71,7 @@ public class Battle extends InputHandler implements GameState
 		
 		currentPose = NimaAttack;
 		
-		if (enemyAttTimer != null) enemyAttTimer.start();
+		enemy.attackTimer.start();
 		
 		UI.init();
 	}
@@ -103,8 +100,14 @@ public class Battle extends InputHandler implements GameState
 	    	  animationFinished = false;
 	    	  Game.soundManager.playSound("Alert2");
 	      }
-	      
-	      if (enemyAttTimer != null && !enemyAttTimer.isRunning()) enemyAttTimer.restart();
+	      if (enemy.attackTimerWidth <=0) {
+	    	  if (currentAnimation == shield && animationFinished == false) {
+	    		  //do not take damage
+	    		  Game.soundManager.playSound("Fx");
+	    	  }
+	    	  else OverWorld.player.hitFor(3);
+	    	  enemy.attackTimerWidth = 200;
+	      }   
       }
 	}
 	
@@ -159,14 +162,14 @@ public class Battle extends InputHandler implements GameState
   	  Game.soundManager.loadMusic("Fight.wav");
   	  Game.soundManager.playMusic();
   	  
-  	  if (enemyAttTimer != null && enemyAttTimer.isRunning()) enemyAttTimer.stop();
+  	  enemy.attackTimer.stop();
   	  
   	  stateManager.popState();//gets rid of battle
   	  stateManager.popState();//gets rid of underlying dialogue
 	}
 	
 	public void handleBattleLost() {
-		if (enemyAttTimer != null && enemyAttTimer.isRunning()) enemyAttTimer.stop();
+		enemy.attackTimer.stop();
 		
 		stateManager.popState();
 		stateManager.popState();
