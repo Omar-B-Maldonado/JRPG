@@ -1,4 +1,4 @@
-# <p align="center">Auctions</p>
+# <p align="center">Nima's Adventure</p>
 
 ### What is this?
 > This is a 2D game created from scratch in Java, inspired by modern rogue-like and role-playing games (such as Binding of Isaac and Pokémon).
