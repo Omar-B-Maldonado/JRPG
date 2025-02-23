@@ -17,10 +17,10 @@ There are many features tailored to creating an interesting experience for the p
 > ![Dialogue](placeholder)
 
 ### Real-time Battles
-> ![Real-time Battles](https://github.com/user-attachments/assets/c2745a4e-a885-4986-900d-3028bdb7f3d0)
+> ![Real-time Battles](placeholder)
 
 ### Battle Poses
-> ![Battle Poses](https://github.com/user-attachments/assets/f534d849-13aa-4dcb-85e1-7ed3b9dec034)
+> ![Battle Poses](placeholder)
 
 ## <p align="center">How to Try it Yourself</p>
 > For now, there is no nicely packaged version of the game, but you can still try it yourself by following the steps below.
