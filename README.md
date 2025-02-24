@@ -11,16 +11,16 @@
 There are many features tailored to creating an interesting experience for the player! For your own viewing experience, all of them are listed and shown below as GIFs.
 
 ### Bullet Hell
-> ![Bullet Hell](placeholder)
+> ![bullet_hell](https://github.com/user-attachments/assets/0d26ab02-5424-4a1c-b850-f9b4bddaf516)
 
 ### Dialogue
-> ![Dialogue](placeholder)
+> ![dialogue](https://github.com/user-attachments/assets/f47150ea-e9df-483c-88f4-bd8b0f267748)
 
 ### Real-time Battles
-> ![Real-time Battles](placeholder)
+> ![rt_battles](https://github.com/user-attachments/assets/3badfdb8-9ad4-4c79-bf71-8f799d16966f)
 
 ### Battle Poses
-> ![Battle Poses](placeholder)
+> ![poses](https://github.com/user-attachments/assets/3dbf64a3-cacf-4506-85e3-7267df5709fc)
 
 ## <p align="center">How to Try it Yourself</p>
 > For now, there is no nicely packaged version of the game, but you can still try it yourself by following the steps below.
