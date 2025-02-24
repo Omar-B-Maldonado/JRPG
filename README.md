@@ -23,7 +23,7 @@ There are many features tailored to creating an interesting experience for the p
 > ![poses](https://github.com/user-attachments/assets/3dbf64a3-cacf-4506-85e3-7267df5709fc)
 
 ## <p align="center">How to Try it Yourself</p>
-> For now, there is no nicely packaged version of the game, but you can still try it yourself by following the steps below.
+> For now, there is no nicely packaged/easily executable version of the game (I'm still working on it), but you can still try the game out yourself by following the steps below.
 > 1. Clone the repository in an IDE (such as Eclipse or VSCode)
 > 2. Navigate to JRPG > src > main > Game.java
 > 3. Run the java application from your IDE (with Game.java as the main file)
